@@ -4,3 +4,4 @@ numpy==2.2.1
 pandas==2.2.3
 networkx==3.4.2
 beautifulsoup4
+yfinance
