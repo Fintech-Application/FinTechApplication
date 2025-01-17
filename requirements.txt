@@ -6,3 +6,4 @@ networkx==3.4.2
 beautifulsoup4
 yfinance
 fredapi
+pandas-datareader
