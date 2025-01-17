@@ -344,7 +344,7 @@ def two_stage_growth_model():
     st.write("")
 
     # Step 4: Present value of terminal price
-    st.write(f"4. **Calculate the present value of the terminal price \(PT\):**")
+    st.write(r"4. **Calculate the present value of the terminal price \(PT\):**")
     PV_P_T = P_T / (1 + required_rate_of_return) ** high_growth_years
 
 # Use st.latex for rendering LaTeX directly
