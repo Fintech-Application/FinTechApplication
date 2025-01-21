@@ -8,3 +8,4 @@ yfinance
 fredapi
 pandas-datareader
 setuptools
+scipy
