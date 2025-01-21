@@ -6,6 +6,8 @@ from io import BytesIO
 import requests
 from bs4 import BeautifulSoup
 import yfinance as yf
+from datetime import date
+
 
 def stocks_description():
     st.write("""
@@ -702,59 +704,169 @@ def free_cash_flows():
 def FCFF_webscraping():
     st.title("FCFF Calculation with Dynamic Inputs")
     
-    # User inputs for ticker and date range
+    companies = {
+        "Apple": "AAPL",
+        "Microsoft": "MSFT",
+        "Amazon": "AMZN",
+        "Google (Alphabet)": "GOOGL",
+        "Meta (Facebook)": "META",
+        "Tesla": "TSLA",
+        "Berkshire Hathaway": "BRK-B",
+        "NVIDIA": "NVDA",
+        "Johnson & Johnson": "JNJ",
+        "JPMorgan Chase": "JPM",
+        "Procter & Gamble": "PG",
+        "Visa": "V",
+        "UnitedHealth Group": "UNH",
+        "Mastercard": "MA",
+        "ExxonMobil": "XOM",
+        "Walmart": "WMT",
+        "Pfizer": "PFE",
+        "Chevron": "CVX",
+        "Disney": "DIS",
+        "Coca-Cola": "KO"
+    }
+    
+    # User selects a company from the dropdown
     st.sidebar.header("Company Details")
-    ticker = st.sidebar.text_input("Enter Company Ticker:", "AAPL")
-    start_date = st.sidebar.date_input("Start Date")
-    end_date = st.sidebar.date_input("End Date")
+    company_name = st.sidebar.selectbox("Select a Company:", list(companies.keys()))
+    ticker = companies[company_name]
+    st.sidebar.write(f"Selected Ticker: {ticker}")
+    
+    # Year selection
+    st.sidebar.header("Select Year Range")
+    available_years = [2021, 2022, 2023, 2024]
+    start_year = st.sidebar.selectbox("Start Year", available_years, index=1)  # Default 2022
+    end_year = st.sidebar.selectbox("End Year", available_years, index=len(available_years) - 1)  # Default 2024
+
+    if start_year > end_year:
+        st.sidebar.error("Start year cannot be after the end year.")
      
+        # Note for users
+    st.info(
+        "⚠️ **Note:** To calculate FCFF for a given range (e.g., 2022–2024), ensure that the selected data range includes at least one year prior to the first year in the range (e.g., 2021–2024). "
+        "This ensures accurate computation of changes in Net Working Capital and other financial metrics."
+    )
     # Fetch financial data
     if st.sidebar.button("Fetch Financial Data"):
         try:
             stock = yf.Ticker(ticker)
+
+            # Fetch and filter data
             income_statement = stock.financials
             balance_sheet = stock.balance_sheet
             cashflow_statement = stock.cashflow
+
+            # Filter by year range
+            def filter_by_year(data):
+                year_columns = [col.year for col in data.columns]  # Extract years from column headers
+                return data.loc[:, [(start_year <= col.year <= end_year) for col in data.columns]]
+
+            relevant_is = filter_by_year(income_statement)
+            relevant_bs = filter_by_year(balance_sheet)
+            relevant_cf = filter_by_year(cashflow_statement)
+
+            # Display filtered data
+            st.write(f"### Income Statement for {company_name} ({ticker})")
+            st.dataframe(relevant_is)
             
-            st.write(f"### Income Statement for {ticker}")
-            st.dataframe(income_statement)
+            st.write(f"### Balance Sheet for {company_name} ({ticker})")
+            st.dataframe(relevant_bs)
             
-            st.write(f"### Balance Sheet for {ticker}")
-            st.dataframe(balance_sheet)
-            
-            st.write(f"### Cashflow Statement for {ticker}")
-            st.dataframe(cashflow_statement)
-            
+            st.write(f"### Cashflow Statement for {company_name} ({ticker})")
+            st.dataframe(relevant_cf)
+
         except Exception as e:
-            st.error("Error fetching data. Please check the ticker or try again.")
+            st.error(f"Error fetching data. Details: {e}")
     
-    # FCFF Calculation
-    st.header("Free Cash Flow to Firm (FCFF) Calculation")
+    st.header("Free Cash Flow to Firm (FCFF) Calculation - Top Down Approach")
+
+    # EBIT input field
+    st.subheader("Enter EBIT (Earnings Before Interest and Taxes):")
+    st.write("You can find EBIT in the **Income Statement**. It is typically labeled as 'EBIT'.")
     ebit = st.number_input("Enter EBIT:", step=1.0)
+
+    # Capital Expenditures input field
+    st.subheader("Enter Capital Expenditures:")
+    st.write("You can find Capital Expenditures in the **Cash Flow Statement**. Look for 'Capital Expenditures'.")
     cap_exp = st.number_input("Enter Capital Expenditures:", step=1.0)
+
+    # Depreciation input field
+    st.subheader("Enter Depreciation:")
+    st.write("You can find Depreciation in the **Cash Flow Statement** under 'Depreciation'.")
     depreciation = st.number_input("Enter Depreciation:", step=1.0)
+
+    # Change in Net Working Capital input field
+    st.subheader("Enter Change in Net Working Capital:")
+    st.write("You can find this in the **Balance Sheet** under 'Working Capital'.")
     change_in_nwc = st.number_input("Enter Change in Net Working Capital:", step=1.0)
+
+    # Tax Rate input field
+    st.subheader("Enter Tax Rate (%):")
+    st.write("You can find this in the **Income Statement** under 'Tax Rate For Calcs'.")
     tax_rate = st.number_input("Enter Tax Rate (%):", step=0.1) / 100
 
     # Calculation fields for verification
     st.subheader("Enter calculated values for verification")
+
+    # T * EBIT input field
+    st.write("You can find the value of 'T * EBIT' (tax-adjusted EBIT) in the **Income Statement** or calculate it by multiplying EBIT by (1 - Tax Rate).")
     t_ebit = st.number_input("T * EBIT:", step=1.0)
+
+    # (Cap Exp - Depreciation) input field
+    st.write("This is the difference between Capital Expenditures and Depreciation, which you can get from the **Cash Flow Statement**.")
     cap_exp_minus_depr = st.number_input("(Cap Exp – Depreciation):", step=1.0)
+
+    # FCFF input field
+    st.write("This is the Free Cash Flow to Firm (FCFF) value you calculated. Compare it with your calculated value from the formula.")
     fcff = st.number_input("Free Cash Flow to Firm (FCFF):", step=1.0)
+
+    st.subheader("FCFF Formula for Top Down Approach")
+    st.markdown("""
+    To calculate the Free Cash Flow to Firm (FCFF) for 2024, use the following formula:
+
+    **FCFF = (EBIT * (1 - Tax Rate)) + Depreciation - Capital Expenditures - Change in NWC**
+
+    """)
 
     # Perform calculations
     if st.button("Calculate and Verify"):
         try:
-            calculated_fcff = (ebit * (1 - tax_rate)) + depreciation - cap_exp - change_in_nwc
-            st.write(f"Calculated FCFF: {calculated_fcff:.2f}")
+            # Perform calculations
+            calculated_t_ebit = ebit * (1 - tax_rate)  # Tax-adjusted EBIT
+            calculated_cap_exp_minus_depr = cap_exp - depreciation  # CapEx minus Depreciation
+            calculated_fcff = calculated_t_ebit + depreciation - cap_exp - change_in_nwc  # FCFF calculation
+
+            # Display calculated values
+            st.subheader("Verification Results")
+            st.write(f"**Calculated T × EBIT (Tax-adjusted EBIT):** {calculated_t_ebit:.2f}")
+            st.write(f"**Calculated (Cap Exp – Depreciation):** {calculated_cap_exp_minus_depr:.2f}")
+            st.write(f"**Calculated FCFF:** {calculated_fcff:.2f}")
             
             # Verification
-            if abs(fcff - calculated_fcff) < 0.01:
+            correct_t_ebit = abs(t_ebit - calculated_t_ebit) < 0.01
+            correct_cap_exp_minus_depr = abs(cap_exp_minus_depr - calculated_cap_exp_minus_depr) < 0.01
+            correct_fcff = abs(fcff - calculated_fcff) < 0.01
+            
+            # Provide feedback for each value
+            if correct_t_ebit:
+                st.success("The entered T × EBIT value is correct!")
+            else:
+                st.error(f"The entered T × EBIT value is incorrect. Expected: {calculated_t_ebit:.2f}")
+
+            if correct_cap_exp_minus_depr:
+                st.success("The entered (Cap Exp – Depreciation) value is correct!")
+            else:
+                st.error(f"The entered (Cap Exp – Depreciation) value is incorrect. Expected: {calculated_cap_exp_minus_depr:.2f}")
+
+            if correct_fcff:
                 st.success("The entered FCFF value is correct!")
             else:
-                st.error("The entered FCFF value is incorrect.")
+                st.error(f"The entered FCFF value is incorrect. Expected: {calculated_fcff:.2f}")
+
         except Exception as e:
             st.error(f"An error occurred: {e}")
+
 
 # Streamlit UI
 def app():
