@@ -14,9 +14,6 @@ def bondvalue(facevalue, coupon_rate, maturity, ytm, payments_per_period):
     PA = facevalue * (1 + (ytm / payments_per_period)) ** (-payments_per_period * maturity)
     bondPrice = PVA + PA
     return bondPrice
-import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
 
 def bond_price(coupon_rate, initial_ytm, maturity, yield_change_range):
     periods = np.arange(1, maturity + 1)
