@@ -77,7 +77,7 @@ def stocks_description():
     The formula is:""")
     st.latex(r" P_0 = \sum_{t=1}^{T} \frac{D_t}{(1+r)^t} + \frac{P_T}{(1+r)^T}")
 
-    st.write(f"""
+    st.write(r"""
     Where:
     - \(Dt\) = Dividend at time \(t\)
     - \(r\) = Required rate of return (20% or 0.20)
