@@ -937,7 +937,7 @@ def historical_sharpe_ratio():
     st.latex(r"""
     \text{Sharpe Ratio} = \frac{R_p - R_f}{\sigma_p}
     """)
-    st.write("""
+    st.write(r"""
     Where:
     - Rp is the return of the portfolio (or investment).
     - Rf is the risk-free rate of return.
