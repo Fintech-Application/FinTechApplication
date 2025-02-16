@@ -721,7 +721,7 @@ Compound interest is the fundamental principle that drives the growth of investm
 A = P \left(1 + \frac{r}{n}\right)^{nt}
 ''')
 
-    st.write("""
+    st.write(r"""
 where:
 - \( A \) represents the amount of money accumulated after \( n \) years, including interest.
 - \( P \) is the principal amount (the initial amount of money).
