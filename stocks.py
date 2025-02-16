@@ -10,9 +10,159 @@ from datetime import date
 
 
 def stocks_description():
+
     st.write("""
-    ## Understanding stocks
+    Welcome to the Stocks Module! In this module, you will explore the fundamental concepts of stock valuation 
+    and learn how to apply various financial models to estimate the intrinsic value of stocks. 
+    Using real-world data from actual companies, you’ll gain hands-on experience in analyzing balance sheets, 
+    income statements, and cash flows.
     """)
+
+    # Key Concepts Covered
+    st.header("Key Concepts Covered")
+    st.write("""
+    1. **Dividend Discount Models (DDM)**: Learn how to value stocks based on expected future dividends.
+    2. **Free Cash Flow to the Firm (FCFF)**: Understand how to value a company based on its free cash flows.
+    3. **Real-World Data Analysis**: Analyze real company data to apply financial models.
+    """)
+
+    # Submodules and Tasks
+    st.header("Submodules and Tasks")
+    st.write("""
+    Below are the submodules available in this component. Each submodule includes interactive tasks, 
+    visualizations, and explanations to help you master the concepts.
+    """)
+
+    # 1. General Dividend Discount Model (DDM)
+    st.subheader("1. General Dividend Discount Model (DDM)")
+    st.write("""
+    #### **What is the Dividend Discount Model?**
+    The Dividend Discount Model (DDM) is a method of valuing a company's stock price based on the theory that its stock is worth the sum of all its future dividend payments, discounted back to their present value. The formula for the general DDM is:
+    """)
+    st.latex(r"P_0 = \sum \left( \frac{D_t}{(1 + r)^t} \right) + \frac{P_t}{(1 + r)^t}")
+
+    st.write("""
+    **Where:**
+    - \\( P0 \\) is the current price of the stock.
+    - \\( Dt \\) is the dividend expected at time \\( t \\).
+    - \\( Pt \\) is the terminal stock price (future value).
+    - \\( r \\) is the required rate of return.
+    - \\( t \\) is the time period.
+    """)
+
+    # 2. Constant Dividend Discount Model
+    st.subheader("2. Constant Dividend Discount Model")
+    st.write("""
+    #### **What is the Constant DDM?**
+    The Constant Dividend Discount Model assumes that dividends will grow at a constant rate indefinitely. The formula is:
+    """)
+    st.latex( r"P₀ =   D₀ * (1 + g) / (r - g)")
+    st.write("""
+    **Where:**
+    
+    - P₀ is the current price of the stock.
+    - D₀ is the current dividend (dividend for the current year).
+    - r is the required rate of return.
+    - g is the constant growth rate of dividends.
+    """)
+
+    # 3. Two-Stage Dividend Discount Model
+    st.subheader("3. Two-Stage Dividend Discount Model")
+    st.write("""
+    #### **What is the Two-Stage DDM?**
+    The Two-Stage Dividend Discount Model is used for companies that are expected to have two distinct growth phases:
+    1. **High Growth Phase**: Dividends grow at a high rate for a limited period.
+    2. **Stable Growth Phase**: Dividends grow at a stable rate indefinitely.
+
+    The formula is:""")
+    st.latex(r" P_0 = \sum_{t=1}^{T} \frac{D_t}{(1+r)^t} + \frac{P_T}{(1+r)^T}")
+
+    st.write(f"""
+    Where:
+    - \(Dt\) = Dividend at time \(t\)
+    - \(r\) = Required rate of return (20% or 0.20)
+    - \(T\) = Number of periods with a high growth rate.
+    - \(PT\) = Terminal price at the end of stage 1 (present value of all future dividends starting from year \(T+1\))
+    
+    #### **Key Insights**:
+    - This model is useful for companies in transition (e.g., tech companies moving from high growth to maturity).
+    - It provides a more realistic valuation for companies with changing growth rates.
+
+    #### **Interactive Task**:
+    - Estimate the intrinsic value of a stock with high initial growth followed by stable growth.
+    """)
+
+    # 4. Free Cash Flow to the Firm (FCFF)
+    st.subheader("4. Free Cash Flow to the Firm (FCFF)")
+    st.write("""
+    #### **What is FCFF?**
+    Free Cash Flow to the Firm (FCFF) represents the cash flow available to all providers of capital (both debt and equity) after accounting for operating expenses, taxes, and capital expenditures. The formula is:
+
+    \
+    FCFF = EBIT(1 - Tax Rate) + Depreciation - Capital Expenditures - Change in Working Capital
+    \
+
+    #### **Key Insights**:
+    - FCFF is used to value the entire firm, not just equity.
+    - It is particularly useful for companies with high capital expenditures or those that do not pay dividends.
+
+    #### **Interactive Task**:
+    - Estimate FCFF for a given company using real-world financial data.
+    """)
+
+    # 5. FCFF (Top-Down Approach)
+    st.subheader("5. FCFF (Top-Down Approach)")
+    st.write("""
+    #### **What is the Top-Down Approach?**
+    The top-down approach to FCFF starts with macroeconomic factors (e.g., industry growth, market conditions) and works down to estimate the company's cash flows. It involves:
+    1. Analyzing the overall economy and industry trends.
+    2. Estimating the company's revenue based on market share.
+    3. Calculating FCFF using the company's financial statements.
+
+    #### **Key Insights**:
+    - This approach is useful for understanding how external factors impact a company's cash flows.
+    - It provides a big-picture view of the company's valuation.
+
+    #### **Interactive Task**:
+    - Perform a top-down analysis to estimate FCFF for a company using real-world data.
+    """)
+
+    # 6. FCFF (Bottom-Up Approach)
+    st.subheader("6. FCFF (Bottom-Up Approach)")
+    st.write("""
+    #### **What is the Bottom-Up Approach?**
+    The bottom-up approach to FCFF starts with the company's financial statements and builds up to estimate cash flows. It involves:
+    1. Analyzing the company's historical financial performance.
+    2. Projecting future revenues, expenses, and capital expenditures.
+    3. Calculating FCFF using detailed financial data.
+
+    #### **Key Insights**:
+    - This approach is more granular and focuses on the company's internal operations.
+    - It is useful for companies with complex financial structures.
+
+    #### **Interactive Task**:
+    - Perform a bottom-up analysis using real-world data to estimate FCFF.
+    """)
+
+    # Why Learn Stock Valuation?
+    st.header("Why Learn Stock Valuation?")
+    st.write("""
+    Stock valuation is a critical skill for investors, analysts, and finance professionals. By understanding the intrinsic value of a stock, you can make informed investment decisions and identify undervalued or overvalued stocks. This module will equip you with the tools and techniques to analyze stocks like a pro, using real-world data to enhance your learning experience.
+    """)
+
+    # Resources
+    st.header("Resources")
+    st.write("Here are some additional resources to deepen your understanding of stock valuation:")
+    st.write("""
+    - **Books**: *Investment Valuation* by Aswath Damodaran, *The Intelligent Investor* by Benjamin Graham
+    - **Online Courses**: [Coursera: Financial Markets by Robert Shiller](https://www.coursera.org/learn/financial-markets-global)
+    - **Websites**: [Investopedia: Stock Valuation](https://www.investopedia.com/terms/s/stockvaluation.asp)
+    - **Python Libraries**: `pandas`, `matplotlib`, `plotly`
+    """)
+
+    # Feedback and Support
+    st.header("Feedback and Support")
+    st.write("If you have any questions or feedback, feel free to reach out to your instructor or the course support team. Happy learning!")
 
 def general_dividend_discount_model():
     st.write("""
@@ -701,7 +851,7 @@ def free_cash_flows():
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
-def FCFF_webscraping():
+def FCFF_webscraping_TopDown():
     st.title("FCFF Calculation with Dynamic Inputs")
     
     companies = {
@@ -867,13 +1017,186 @@ def FCFF_webscraping():
         except Exception as e:
             st.error(f"An error occurred: {e}")
 
+def FCFF_webscraping_BottomUp():
+    st.title("FCFF Calculation with Dynamic Inputs (Bottom-Up Approach)")
+    
+    companies = {
+        "Apple": "AAPL",
+        "Microsoft": "MSFT",
+        "Amazon": "AMZN",
+        "Google (Alphabet)": "GOOGL",
+        "Meta (Facebook)": "META",
+        "Tesla": "TSLA",
+        "Berkshire Hathaway": "BRK-B",
+        "NVIDIA": "NVDA",
+        "Johnson & Johnson": "JNJ",
+        "JPMorgan Chase": "JPM",
+        "Procter & Gamble": "PG",
+        "Visa": "V",
+        "UnitedHealth Group": "UNH",
+        "Mastercard": "MA",
+        "ExxonMobil": "XOM",
+        "Walmart": "WMT",
+        "Pfizer": "PFE",
+        "Chevron": "CVX",
+        "Disney": "DIS",
+        "Coca-Cola": "KO"
+    }
+    
+    # User selects a company from the dropdown
+    st.sidebar.header("Company Details")
+    company_name = st.sidebar.selectbox("Select a Company:", list(companies.keys()))
+    ticker = companies[company_name]
+    st.sidebar.write(f"Selected Ticker: {ticker}")
+    
+    # Year selection
+    st.sidebar.header("Select Year Range")
+    available_years = [2021, 2022, 2023, 2024]
+    start_year = st.sidebar.selectbox("Start Year", available_years, index=1)  # Default 2022
+    end_year = st.sidebar.selectbox("End Year", available_years, index=len(available_years) - 1)  # Default 2024
+
+    if start_year > end_year:
+        st.sidebar.error("Start year cannot be after the end year.")
+     
+    # Note for users
+    st.info(
+        "⚠️ **Note:** To calculate FCFF for a given range (e.g., 2022–2024), ensure that the selected data range includes at least one year prior to the first year in the range (e.g., 2021–2024). "
+        "This ensures accurate computation of changes in Net Working Capital and other financial metrics."
+    )
+    
+    # Fetch financial data
+    if st.sidebar.button("Fetch Financial Data"):
+        try:
+            stock = yf.Ticker(ticker)
+
+            # Fetch and filter data
+            income_statement = stock.financials
+            balance_sheet = stock.balance_sheet
+            cashflow_statement = stock.cashflow
+
+            # Filter by year range
+            def filter_by_year(data):
+                return data.loc[:, [(start_year <= col.year <= end_year) for col in data.columns]]
+
+            relevant_is = filter_by_year(income_statement)
+            relevant_bs = filter_by_year(balance_sheet)
+            relevant_cf = filter_by_year(cashflow_statement)
+
+            # Display filtered data
+            st.write(f"### Income Statement for {company_name} ({ticker})")
+            st.dataframe(relevant_is)
+            
+            st.write(f"### Balance Sheet for {company_name} ({ticker})")
+            st.dataframe(relevant_bs)
+            
+            st.write(f"### Cashflow Statement for {company_name} ({ticker})")
+            st.dataframe(relevant_cf)
+
+        except Exception as e:
+            st.error(f"Error fetching data. Details: {e}")
+    
+    st.header("Free Cash Flow to Firm (FCFF) Calculation - Bottom-Up Approach")
+
+    # Net Income input field
+    st.subheader("Enter Net Income:")
+    st.write("You can find Net Income in the **Income Statement**.")
+    net_income = st.number_input("Enter Net Income:", step=1.0)
+
+    # Depreciation input field
+    st.subheader("Enter Depreciation:")
+    st.write("You can find Depreciation in the **Cash Flow Statement**.")
+    depreciation = st.number_input("Enter Depreciation:", step=1.0)
+
+    # Interest Expense input field
+    st.subheader("Enter Interest Expense:")
+    st.write("You can find Interest Expense in the **Income Statement** under 'Interest Expense'.")
+    interest_expense = st.number_input("Enter Interest Expense:", step=1.0)
+
+    # Tax Rate input field
+    st.subheader("Enter Tax Rate (%):")
+    st.write("You can find the Tax Rate in the **Income Statement**.")
+    tax_rate = st.number_input("Enter Tax Rate (%):", step=0.1) / 100
+
+    # Capital Expenditures input field
+    st.subheader("Enter Capital Expenditures:")
+    st.write("You can find Capital Expenditures in the **Cash Flow Statement**.")
+    cap_exp = st.number_input("Enter Capital Expenditures:", step=1.0)
+
+    # Change in Net Working Capital input field
+    st.subheader("Enter Change in Net Working Capital:")
+    st.write("You can find this in the **Balance Sheet**.")
+    change_in_nwc = st.number_input("Enter Change in Net Working Capital:", step=1.0)
+
+    # Calculation fields for verification
+    st.subheader("Enter calculated values for verification")
+
+    # Net Income + Depreciation input field
+    st.write("Net Income plus Depreciation (used for verification).")
+    ni_plus_depr = st.number_input("Net Income + Depreciation:", step=1.0)
+
+    # Adjusted Interest Expense input field
+    st.write("Adjusted Interest Expense = Interest Expense × (1 - Tax Rate).")
+    adj_interest_exp = st.number_input("Adjusted Interest Expense:", step=1.0)
+
+    # FCFF input field
+    st.write("Free Cash Flow to Firm (FCFF) value for verification.")
+    fcff = st.number_input("Free Cash Flow to Firm (FCFF):", step=1.0)
+
+    st.subheader("FCFF Formula for Bottom-Up Approach")
+    st.markdown("""
+    To calculate the Free Cash Flow to Firm (FCFF) for 2024, use the following formula:
+
+    **FCFF = Net Income + (Interest Expense × (1 - Tax Rate)) + Depreciation - Capital Expenditures - Change in NWC**
+    """)
+
+    # Perform calculations
+    if st.button("Calculate and Verify"):
+        try:
+            # Perform calculations
+            calculated_adj_interest_exp = interest_expense * (1 - tax_rate)  # Adjusted Interest Expense
+            calculated_ni_plus_depr = net_income + depreciation  # Net Income + Depreciation
+            calculated_fcff = (
+                net_income + calculated_adj_interest_exp + depreciation - cap_exp - change_in_nwc
+            )  # FCFF calculation
+
+            # Display calculated values
+            st.subheader("Verification Results")
+            st.write(f"**Calculated Adjusted Interest Expense:** {calculated_adj_interest_exp:.2f}")
+            st.write(f"**Calculated Net Income + Depreciation:** {calculated_ni_plus_depr:.2f}")
+            st.write(f"**Calculated FCFF:** {calculated_fcff:.2f}")
+            
+            # Verification
+            correct_adj_interest_exp = abs(adj_interest_exp - calculated_adj_interest_exp) < 0.01
+            correct_ni_plus_depr = abs(ni_plus_depr - calculated_ni_plus_depr) < 0.01
+            correct_fcff = abs(fcff - calculated_fcff) < 0.01
+            
+            # Provide feedback for each value
+            if correct_adj_interest_exp:
+                st.success("The entered Adjusted Interest Expense value is correct!")
+            else:
+                st.error(f"The entered Adjusted Interest Expense value is incorrect. Expected: {calculated_adj_interest_exp:.2f}")
+
+            if correct_ni_plus_depr:
+                st.success("The entered Net Income + Depreciation value is correct!")
+            else:
+                st.error(f"The entered Net Income + Depreciation value is incorrect. Expected: {calculated_ni_plus_depr:.2f}")
+
+            if correct_fcff:
+                st.success("The entered FCFF value is correct!")
+            else:
+                st.error(f"The entered FCFF value is incorrect. Expected: {calculated_fcff:.2f}")
+
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+
+
 
 # Streamlit UI
 def app():
     st.title('Stocks Page')
     page = st.sidebar.selectbox("Select Page", ["Stocks Description", "General Dividend Discount Model", 
                                                 "Constant Dividend Growth Model", "Two Stage Dividend Growth Model", 
-                                                "FCFF", "Free Cash Flows", "FCFF webscraping"])
+                                                "FCFF", "Free Cash Flows", "FCFF webscraping TopDown","FCFF webscraping BottomUp"])
 
     # Track the current page
     if "page" not in st.session_state:
@@ -905,8 +1228,11 @@ def app():
     elif st.session_state.page == "Free Cash Flows":
         free_cash_flows()
     
-    elif st.session_state.page == "FCFF webscraping":
-        FCFF_webscraping()
+    elif st.session_state.page == "FCFF webscraping TopDown":
+        FCFF_webscraping_TopDown()
+    
+    elif st.session_state.page == "FCFF webscraping BottomUp":
+        FCFF_webscraping_BottomUp()
 
 if __name__ == "__main__":
     app()
