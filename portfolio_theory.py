@@ -282,7 +282,7 @@ def small_vs_large_portfolio_api():
     st.latex(r'''
         R_{\text{annual}} = \left(\prod_{i=1}^{n} (1 + R_i)\right) - 1
     ''')
-    st.markdown("""
+    st.markdown(r"""
     Where \( Ri \) represents the monthly returns.
 
     4. **Plot Interpretation:**
