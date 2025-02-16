@@ -9,3 +9,4 @@ fredapi
 pandas-datareader
 setuptools
 scipy
+openpyxl
