@@ -509,7 +509,7 @@ def app():
         fig_combined = plot_put_call_parity_graph(exerciseprice, maturity, riskfreerate, sigma)
         st.pyplot(fig_combined)
 
-        st.markdown("""### Understanding Put-Call Parity
+        st.markdown(r"""### Understanding Put-Call Parity
 
         #### 1. **Definition of Put-Call Parity**
         Put-Call Parity is a fundamental principle in options pricing that shows the relationship between the prices of European put and call options. It states that the value of a call option, combined with the present value of the exercise price, should be equal to the value of a put option and the current stock price. The equation is expressed as:
