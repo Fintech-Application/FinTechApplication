@@ -509,37 +509,38 @@ def app():
         fig_combined = plot_put_call_parity_graph(exerciseprice, maturity, riskfreerate, sigma)
         st.pyplot(fig_combined)
 
-        st.markdown("""### Understanding Put-Call Parity
+        st.markdown("""
+        ### Understanding Put-Call Parity
 
         #### 1. **Definition of Put-Call Parity**
         Put-Call Parity is a fundamental principle in options pricing that shows the relationship between the prices of European put and call options. It states that the value of a call option, combined with the present value of the exercise price, should be equal to the value of a put option and the current stock price. The equation is expressed as:
 
-        \[ Ct + X / (1+r)^T = S + Pt \]
+        $$ C_t + \frac{X}{(1+r)^T} = S + P_t $$
 
         Where:
-        - \( Ct \) = Call option price
-        - \( Pt \) = Put option price
+        - \( C_t \) = Call option price
+        - \( P_t \) = Put option price
         - \( S \) = Stock price
         - \( X \) = Exercise (strike) price
         - \( r \) = Risk-free rate
         - \( T \) = Time to maturity
 
-        #### 2. **Call Option Price (Ct) vs Stock Price (S)**
-        - **Graph Overview**: This graph illustrates the price of a call option (Ct) as the stock price (S) varies.
+        #### 2. **Call Option Price (C_t) vs Stock Price (S)**
+        - **Graph Overview**: This graph illustrates the price of a call option (\(C_t\)) as the stock price (\(S\)) varies.
         - **Key Insights**:
         - The call option price increases as the stock price increases.
         - This behavior reflects the potential value of exercising the option if the stock price exceeds the exercise price.
 
-        #### 3. **Present Value of Exercise Price (X / (1+r)^T)**
-        - **Graph Overview**: This graph shows the present value of the exercise price, which is calculated by discounting the exercise price \( X \) by the risk-free rate \( r \) over the time to maturity \( T \).
+        #### 3. **Present Value of Exercise Price \( \frac{X}{(1+r)^T} \)**
+        - **Graph Overview**: This graph shows the present value of the exercise price, which is calculated by discounting the exercise price (\(X\)) by the risk-free rate (\(r\)) over the time to maturity (\(T\)).
         - **Key Insights**:
         - The present value of the exercise price remains constant across different stock prices.
         - A higher risk-free rate decreases the present value, making it cheaper to exercise the option in the future.
 
         #### 4. **Put-Call Parity (Combined Graph)**
         - **Graph Overview**: The combined graph shows the Left-Hand Side (LHS) and Right-Hand Side (RHS) of the Put-Call Parity equation as stock prices vary.
-        - **LHS**: \( Ct + X / (1+r)^T \) - The sum of the call option price and the present value of the exercise price.
-        - **RHS**: \( S + Pt \) - The sum of the stock price and the put option price.
+        - **LHS**: \( C_t + \frac{X}{(1+r)^T} \) - The sum of the call option price and the present value of the exercise price.
+        - **RHS**: \( S + P_t \) - The sum of the stock price and the put option price.
         - **Key Insights**:
         - The Put-Call Parity relationship holds when the LHS and RHS lines overlap, demonstrating that both sides of the equation yield the same value.
         - Deviations from this parity can indicate potential arbitrage opportunities.

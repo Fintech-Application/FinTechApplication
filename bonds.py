@@ -114,7 +114,7 @@ def plot_percentage_change(facevalue, payments_per_period, k):
     Let's see how four different bonds with varying coupon rates and maturities respond to changes in YTM. Use the sliders to experiment with different parameters for each bond and observe the resulting percentage changes in their prices.
     """)
 
-    st.write("Adjust the parameters for the four bonds:")
+    )
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
     # Arrange sliders in columns
     col1, col2, col3, col4 = st.columns(4)
