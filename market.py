@@ -76,3 +76,24 @@ def task():
     if st.button("Submit Answers"):
         st.success("Your answers have been submitted!")
         st.json(answers)
+
+
+def market_efficiency_definition():
+    st.write("Market efficiency is a concept in financial economics that suggests that financial markets reflect all available information...")
+
+def app():
+    st.title('Market Efficiency Page')
+    page = st.sidebar.selectbox("Select Page", ["Market Efficiency Description", "Task"])
+
+    if "page" not in st.session_state:
+        st.session_state.page = "Market Efficiency Description"
+    else:
+        st.session_state.page = page
+
+    if st.session_state.page == "Market Efficiency Description":
+        market_efficiency_definition()
+    elif st.session_state.page == "Task":
+        task()
+
+if __name__ == "__main__":
+    app()
