@@ -1,88 +1,103 @@
 import streamlit as st
-import yfinance as yf
-import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
-
-# Fetch stock prices function
-def fetch_stock_prices(stock, event_date, days=50):
-    event_datetime = datetime.strptime(event_date, "%Y-%m-%d")
-    start_date = (event_datetime - timedelta(days=days)).strftime("%Y-%m-%d")
-    end_date = (event_datetime + timedelta(days=days)).strftime("%Y-%m-%d")
-
-    df = yf.download(stock, start=start_date, end=end_date)
-    if df.empty:
-        st.error(f"No data available for {stock}.")
-        return pd.DataFrame()
-
-    df['Days Relative'] = (df.index - event_datetime).days
-    df['Price'] = df['Adj Close'] if 'Adj Close' in df.columns else df['Close']
-
-    return df
-
-# Plot stock price graph
-def plot_stock_price(stock, df, event, event_date):
-    event_datetime = datetime.strptime(event_date, "%Y-%m-%d")
-    
-    if event_datetime not in df.index:
-        event_datetime = df.index.get_indexer([event_datetime], method='nearest')
-        event_datetime = df.index[event_datetime[0]]
-        st.warning(f"No data available on {event_date}, using nearest available date: {event_datetime}")
-
-    plt.figure(figsize=(12, 6))
-    plt.plot(df['Days Relative'], df['Price'], label=stock, color='blue')
-    plt.axvline(x=0, color='r', linestyle='--', label='Event Day')
-    plt.scatter(0, df.loc[event_datetime, 'Price'], color='red', zorder=3, label=f"Event Date: {event_datetime}")
-
-    plt.title(f"Stock Prices Around {event}")
-    plt.xlabel("Days Relative to Event")
-    plt.ylabel("Stock Price")
-    plt.legend()
-    plt.grid()
-    st.pyplot(plt)
-
-# Display Question Section
-def display_exam_question(stock, event_name, event_date, citations):
-    st.subheader(f"{event_name} ({stock})")
-    df = fetch_stock_prices(stock, event_date)
-    if not df.empty:
-        plot_stock_price(stock, df, event_name, event_date)
-
-    st.write("### Question:")
-    st.write("What kind of market efficiency is this situation?")
-    user_answer = st.text_area(f"Your Answer for {stock}")
-
-    # Citations
-    st.write("#### Citations:")
-    for citation in citations:
-        st.markdown(f"- [{citation}]({citation})")
-
-    return user_answer
-
-def task():
-    st.title("Market Efficiency Exam")
-
-    answers = {}
-    
-    # Nvidia Example
-    citations_nvidia = [
-        "https://www.cnbc.com/2025/01/27/nvidia-sheds-almost-600-billion-in-market-cap-biggest-drop-ever.html",
-        "https://www.investopedia.com/dow-jones-today-01272025-8780724",
-        "https://fortune.com/2025/01/27/nvidia-deepseek-rout-tech-stocks/"
-    ]
-    answer_nvda = display_exam_question("NVDA", "Nvidia Shares Drop, Shedding $600 Billion in Market Cap", "2025-01-27", citations_nvidia)
-    answers["Nvidia"] = answer_nvda
-
-    if st.button("Submit Answers"):
-        st.success("Your answers have been submitted!")
-        st.json(answers)
-
+from io import BytesIO
 
 def market_efficiency_definition():
     st.write("Market efficiency is a concept in financial economics that suggests that financial markets reflect all available information...")
 
+def task():
+    st.title("Task - Analyze Market Efficiency")
+
+    # Displaying the first image
+    st.write("#### Graph 1:")
+    st.image("market_efficiency_task_images/walgreens.png")
+
+    st.write("### Question:")
+    st.text_area("What kind of market efficiency is this?", key="efficiency_answer1", height=140)
+
+    st.write("#### Citations:")
+    st.markdown("""
+    1. https://www.investopedia.com/walgreens-stock-sinks-to-27-year-lows-amid-weak-consumer-demand-8670428
+    2. https://www.wsj.com/livecoverage/stock-market-today-dow-sp500-nasdaq-live-06-27-2024/card/walgreens-stock-tests-lowest-levels-in-decades-DZaKcTEkPkd99esb2aO0
+    3. https://www.cnbc.com/2024/06/27/walgreens-wba-earnings-q3-2024.html
+    4. https://www.aaii.com/investingideas/article/216962-why-walgreens-boots-alliance-inc8217s-wba-stock-is-down-2216
+    5. https://investor.walgreensbootsalliance.com/news-releases/news-release-details/walgreens-boots-alliance-reports-fiscal-2024-third-quarter
+    6. https://www.wsj.com/livecoverage/stock-market-today-dow-sp500-nasdaq-live-06-27-2024
+    7. https://www.reuters.com/business/retail-consumer/walgreens-cuts-2024-profit-forecast-announces-store-closures-2024-06-27/
+    8. https://www.forbes.com/sites/tylerroush/2024/10/15/walgreens-closing-1200-stores-as-earnings-beat-projections/
+    """)
+
+    # Displaying the second image
+    st.write("#### Graph 2:")
+    st.image("market_efficiency_task_images/Reddit.png")  # You can use another image here if needed
+
+    st.write("### Question:")
+    st.text_area("What kind of market efficiency is this?", key="efficiency_answer2", height=140)
+
+    st.write("#### Citations:")
+    st.markdown("""
+    1.	https://www.bloomberg.com/news/articles/2024-10-29/reddit-signals-strong-holiday-quarter-to-come-shares-soar
+    2.	https://www.wsj.com/livecoverage/stock-market-today-earnings-dow-sp500-nasdaq-live-10-29-2024/card/reddit-turns-a-profit-grows-revenue-and-users-BfRUp5yZrbtjLVqOydRU
+    """)
+
+    # Displaying the third image
+    st.write("#### Graph 3:")
+    st.image("market_efficiency_task_images/AppLovin.png")  # You can use another image here if needed
+
+    st.write("### Question:")
+    st.text_area("What kind of market efficiency is this?", key="efficiency_answer3", height=140)
+
+    st.write("#### Citations:")
+    st.markdown("""
+    1. [Another Article on Stock Movements](https://www.samplelink3.com)
+    2. [Efficient Market Hypothesis](https://www.samplelink4.com)
+    """)
+
+    # Displaying the fourth image
+    st.write("#### Graph 4:")
+    st.image("market_efficiency_task_images/Tesla.png")  # You can use another image here if needed
+
+    st.write("### Question:")
+    st.text_area("What kind of market efficiency is this?", key="efficiency_answer4", height=140)
+
+    st.write("#### Citations:")
+    st.markdown("""
+    1. https://esgnews.com/tesla-shares-soar-12-percent-in-premarket-trading-following-trump-reelection/
+    2. https://nypost.com/2024/11/06/business/tesla-shares-surge-on-trump-victory-after-musks-campaign-support/
+    3. https://www.wsj.com/livecoverage/stock-market-today-fed-meeting-dow-nasdaq-sp500-live-11-06-2024/card/tesla-stock-soars-premarket-bucking-wider-ev-selloff-WQ602tHDJHsL1oO0GeJF
+    4. https://www.nytimes.com/2024/11/06/business/tesla-stock-elon-musk-trump.html
+    5. https://www.bloomberg.com/news/articles/2024-11-06/tesla-soars-as-musk-s-all-in-bet-on-trump-seen-reaping-rewards?embedded-checkout=true
+    """)
+
+     # Displaying the fifth image
+    st.write("#### Graph 5:")
+    st.image("market_efficiency_task_images/crowdstrike.png")  # You can use another image here if needed
+
+    st.write("### Question:")
+    st.text_area("What kind of market efficiency is this?", key="efficiency_answer5", height=140)
+
+    st.write("#### Citations:")
+    st.markdown("""
+    1. https://roboforex.com/beginners/analytics/forex-forecast/stocks/stocks-forecast-crwd-2024/
+    2. https://www.morningstar.com/markets/crowdstrike-share-fall-offers-buying-opportunity
+    3. https://www.forbes.com/sites/petercohan/2024/07/19/crowdstrike-stock-falls-post-outage-but-there-are-still-reasons-to-buy/
+    """)
+
+     # Displaying the sixth image
+    st.write("#### Graph 6:")
+    st.image("market_efficiency_task_images/Nvidia.png")  # You can use another image here if needed
+
+    st.write("### Question:")
+    st.text_area("What kind of market efficiency is this?", key="efficiency_answer6", height=140)
+
+    st.write("#### Citations:")
+    st.markdown("""
+    1. https://www.cnbc.com/2025/01/27/nvidia-sheds-almost-600-billion-in-market-cap-biggest-drop-ever.html
+    2. https://www.investopedia.com/dow-jones-today-01272025-8780724
+    3. https://fortune.com/2025/01/27/nvidia-deepseek-rout-tech-stocks/
+    """)
+
 def app():
-    st.title('Market Efficiency Page')
     page = st.sidebar.selectbox("Select Page", ["Market Efficiency Description", "Task"])
 
     if "page" not in st.session_state:
