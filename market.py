@@ -49,8 +49,8 @@ def task():
 
     st.write("#### Citations:")
     st.markdown("""
-    1. [Another Article on Stock Movements](https://www.samplelink3.com)
-    2. [Efficient Market Hypothesis](https://www.samplelink4.com)
+    1. https://www.nasdaq.com/articles/daiwa-capital-upgrades-applovin-app
+    2. https://www.investopedia.com/dow-jones-today-11072024-8741258
     """)
 
     # Displaying the fourth image
