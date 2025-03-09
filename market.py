@@ -64,7 +64,7 @@ def task():
     st.image("market_efficiency_task_images/walgreens.png")
 
     st.write("### Question:")
-    st.text_area("What kind of market efficiency is this?", key="efficiency_answer1", height=140)
+    st.text_area("What form of market efficiency applies to the drop in Walgreens' stock price due to weak consumer demand?", key="efficiency_answer1", height=140)
 
     st.write("#### Citations:")
     st.markdown("""
@@ -83,7 +83,7 @@ def task():
     st.image("market_efficiency_task_images/Reddit.png")  # You can use another image here if needed
 
     st.write("### Question:")
-    st.text_area("What kind of market efficiency is this?", key="efficiency_answer2", height=140)
+    st.text_area("What form of market efficiency applies to the surge in Reddit's stock price due to strong earnings?", key="efficiency_answer2", height=140)
 
     st.write("#### Citations:")
     st.markdown("""
@@ -96,7 +96,7 @@ def task():
     st.image("market_efficiency_task_images/AppLovin.png")  # You can use another image here if needed
 
     st.write("### Question:")
-    st.text_area("What kind of market efficiency is this?", key="efficiency_answer3", height=140)
+    st.text_area("What form of market efficiency applies to the surge in AppLovin's stock price due to an upgrade and strong earnings?", key="efficiency_answer3", height=140)
 
     st.write("#### Citations:")
     st.markdown("""
@@ -109,7 +109,7 @@ def task():
     st.image("market_efficiency_task_images/Tesla.png")  # You can use another image here if needed
 
     st.write("### Question:")
-    st.text_area("What kind of market efficiency is this?", key="efficiency_answer4", height=140)
+    st.text_area("What form of market efficiency applies to the surge in Tesla's stock price due to an election victory and Elon Musk's involvement?", key="efficiency_answer4", height=140)
 
     st.write("#### Citations:")
     st.markdown("""
@@ -125,7 +125,7 @@ def task():
     st.image("market_efficiency_task_images/crowdstrike.png")  # You can use another image here if needed
 
     st.write("### Question:")
-    st.text_area("What kind of market efficiency is this?", key="efficiency_answer5", height=140)
+    st.text_area("What form of market efficiency applies to the drop in CrowdStrike's stock price due to a software outage?", key="efficiency_answer5", height=140)
 
     st.write("#### Citations:")
     st.markdown("""
@@ -139,7 +139,7 @@ def task():
     st.image("market_efficiency_task_images/Nvidia.png")  # You can use another image here if needed
 
     st.write("### Question:")
-    st.text_area("What kind of market efficiency is this?", key="efficiency_answer6", height=140)
+    st.text_area("What form of market efficiency applies to the drop in Nvidia's stock price, resulting in a $600 billion market cap loss?", key="efficiency_answer6", height=140)
 
     st.write("#### Citations:")
     st.markdown("""
