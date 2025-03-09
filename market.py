@@ -4,7 +4,57 @@ from io import BytesIO
 import numpy as np
 
 def market_efficiency_definition():
-    st.write("Market efficiency is a concept in financial economics that suggests that financial markets reflect all available information...")
+    # Title
+    st.title("Understanding Market Efficiency")
+
+    # Introduction
+    st.markdown(
+        """
+        Market efficiency refers to the extent to which market prices reflect all available information.
+        According to the **Efficient Market Hypothesis (EMH)**, it is impossible to consistently achieve returns
+        higher than average market returns on a risk-adjusted basis, as prices always incorporate and reflect all relevant information.
+        """
+    )
+
+    # Types of Market Efficiency
+    st.header("Types of Market Efficiency")
+
+    st.subheader("1. Weak-Form Efficiency")
+    st.markdown(
+        """
+        - In a weak-form efficient market, current stock prices reflect all **past trading information** (e.g., price and volume data).
+        - Technical analysis is ineffective as past price patterns cannot predict future prices.
+        - However, fundamental analysis may still provide opportunities for excess returns.
+        """
+    )
+
+    st.subheader("2. Semi-Strong Form Efficiency")
+    st.markdown(
+        """
+        - In a semi-strong form efficient market, prices incorporate **all publicly available information**, including financial statements, news, and economic data.
+        - Neither technical analysis nor fundamental analysis can provide an edge, as all available information is already priced in.
+        - Only insider information can potentially lead to abnormal profits.
+        """
+    )
+
+    st.subheader("3. Strong-Form Efficiency")
+    st.markdown(
+        """
+        - In a strong-form efficient market, prices reflect **all information, both public and private (insider information).**
+        - Even insider trading would not provide an advantage in such a market.
+        - Empirical evidence suggests that markets are not perfectly strong-form efficient.
+        """
+    )
+
+    # Implications of Market Efficiency
+    st.header("Implications of Market Efficiency")
+    st.markdown(
+        """
+        - If markets are efficient, it is difficult for investors to consistently outperform the market.
+        - **Passive investing**, such as index fund investing, is a preferred strategy in highly efficient markets.
+        - Market anomalies (e.g., momentum effects, January effect) suggest that markets may not be perfectly efficient.
+        """
+    )
 
 def task():
     st.title("Task - Analyze Market Efficiency")
@@ -148,7 +198,7 @@ def oil_hedging():
 
     # Show plot in Streamlit
     st.pyplot(fig)
-    
+
 def app():
     page = st.sidebar.selectbox("Select Page", ["Market Efficiency Description", "Task", "Oil Hedging"])
 
