@@ -286,8 +286,87 @@ def app():
         st.session_state.page = page
 
     if st.session_state.page == "Options Description":
-        st.write("Options are financial derivatives that give buyers the right, but not the obligation, to buy or sell an underlying asset at an agreed-upon price and date.")
-        # Add more descriptive content here
+        st.markdown(
+            """
+            Options are derivative contracts that give the holder the right (but not the obligation) to buy or sell an underlying asset
+            at a predetermined price before or at expiration. The two main types of options are **Call Options** and **Put Options**.
+            """
+        )
+
+        # Call Option
+        st.header("Call Option")
+        st.markdown(
+            """
+            A **Call Option** gives the holder the right to **buy** an asset at a specified price (strike price) before or at expiration.
+            - If the market price of the asset is higher than the strike price, the option has value.
+            - Profit = **max(Stock Price - Strike Price, 0) - Premium Paid**
+            - Used for **bullish** strategies when expecting price increases.
+            """
+        )
+
+        # Put Option
+        st.header("Put Option")
+        st.markdown(
+            """
+            A **Put Option** gives the holder the right to **sell** an asset at a specified price before or at expiration.
+            - If the market price of the asset is lower than the strike price, the option has value.
+            - Profit = **max(Strike Price - Stock Price, 0) - Premium Paid**
+            - Used for **bearish** strategies when expecting price declines.
+            """
+        )
+
+        # Put-Call Parity
+        st.header("Put-Call Parity")
+        st.markdown(
+        r"""
+        The **Put-Call Parity** theorem establishes a relationship between the price of European call and put options with the same
+        strike price and expiration. It is given by:
+
+        $$ C_0 + \frac{X}{(1 + r)^T} = P_0 + S_0 $$
+
+        Where:
+        - \( C0 \) = Call Option Price
+        - \( P0 \) = Put Option Price
+        - \( S0 \) = Stock Price
+        - \( X \) = Strike Price
+        - \( r \) = Risk-Free Rate
+        - \( T \) = Time to Expiration
+
+        This principle prevents arbitrage opportunities in the options market.
+        """
+    )
+
+        # Intrinsic Payoff
+        st.header("Intrinsic Payoff")
+        st.markdown(
+        """
+        The **Intrinsic Value** of an option is the immediate payoff if exercised:
+        - **Call Option:** $$ \max(S - X, 0) $$
+        - **Put Option:** $$ \max(X - S, 0) $$
+
+        It represents the option’s value at expiration, ignoring time value.
+        """, unsafe_allow_html=True
+    )
+
+        # Binomial Option Pricing
+        st.header("Binomial Option Pricing")
+        st.markdown(
+        r"""
+        The **Binomial Option Pricing Model** estimates option prices by modeling possible future stock prices over discrete time steps.
+        - The stock price moves up or down at each step with probabilities.
+        - The option is valued by working backward from expiration using risk-neutral probabilities.
+        - Formula for one-step binomial model:
+
+        $$ C = \frac{pC_u + (1-p)C_d}{(1 + r)} $$
+
+        Where:
+        - \( Cu \), \( Cd \) are the call values in the up and down states.
+        - \( p \) is the probability of an up move.
+        - \( r \) is the risk-free rate.
+
+        This model is widely used in pricing American options that allow early exercise.
+        """
+    )
 
     elif st.session_state.page == "Static Call Option Price vs Stock Price":
         st.title('Call Option Price vs Stock Price Graph')
@@ -299,11 +378,12 @@ def app():
         # Generate and display the static graph
         fig = static_call_option_vs_stock_price(exerciseprice, maturity, riskfreerate, sigma)
         st.pyplot(fig)
-        st.markdown("""### Definition of Call Option
-        A call option gives the holder the right, but not the obligation, to buy an underlying asset at a predetermined strike price (exercise price) before or at expiration.
+        st.markdown("""
+        ### Definition of Call Option
+        A **call option** gives the holder the right, but not the obligation, to buy an underlying asset at a predetermined strike price (exercise price) before or at expiration.
 
         ### Black-Scholes Model Overview
-        The Black-Scholes model calculates the theoretical price of European-style call and put options based on factors such as stock price, strike price, time to maturity, risk-free rate, and volatility.
+        The **Black-Scholes model** calculates the theoretical price of European-style call and put options based on factors such as stock price, strike price, time to maturity, risk-free rate, and volatility.
 
         ### Key Inputs
         - **Exercise Price (Strike Price)**: The price at which the underlying asset can be bought.
@@ -315,19 +395,22 @@ def app():
         ### Graph Interpretation
         - **X-Axis (Stock Price)**: Shows the range of possible stock prices at expiration.
         - **Y-Axis (Call Option Price)**: Represents the price of the call option calculated using the Black-Scholes formula.
-        - As stock price increases, the call option price typically increases, reflecting the greater potential value of the option.
+        - As the stock price increases, the call option price typically increases, reflecting the greater potential value of the option.
 
         ### Call Option Pricing Behavior
         - **In-the-Money**: When the stock price is above the exercise price, the call option price increases. The intrinsic value is positive.
         - **At-the-Money**: When the stock price is equal to the exercise price, the call option price is influenced primarily by time value and volatility.
         - **Out-of-the-Money**: When the stock price is below the exercise price, the call option price is lower and approaches zero as the stock price decreases.
 
-        ### Effects of Parameters
+        ### Effects of Parameters on Call Option Pricing
         - **Higher Exercise Price**: Decreases the call option price for a given stock price, as the option becomes less likely to be exercised profitably.
         - **Longer Maturity**: Increases the call option price, as more time allows for a greater chance of the stock price exceeding the exercise price.
         - **Higher Risk-Free Rate**: Increases the call option price, as the present value of the exercise price is reduced.
-        - **Higher Volatility**: Increases the call option price, as greater price fluctuations enhance the potential value of the option.""")
-            
+        - **Higher Volatility**: Increases the call option price, as greater price fluctuations enhance the potential value of the option.
+
+        ### Conclusion
+        The value of a call option is influenced by several factors, and understanding how these factors affect the option price can provide valuable insights into option pricing strategies.
+        """)
     elif st.session_state.page == "Static Put Option Price vs Stock Price":
         st.title('Put Option Price vs Stock Price Graph')
         exerciseprice = 200  # Example Exercise Price
@@ -338,7 +421,8 @@ def app():
         # Generate and display the static graph
         fig = static_put_option_vs_stock_price(exerciseprice, maturity, riskfreerate, sigma)
         st.pyplot(fig)
-        st.markdown("""### Definition of Put Option
+        st.markdown("""
+        ### Definition of Put Option
                 
         A put option gives the holder the right, but not the obligation, to sell an underlying asset at a predetermined strike price (exercise price) before or at expiration.
 
@@ -509,12 +593,13 @@ def app():
         fig_combined = plot_put_call_parity_graph(exerciseprice, maturity, riskfreerate, sigma)
         st.pyplot(fig_combined)
 
-        st.markdown(r"""### Understanding Put-Call Parity
+        st.markdown(r"""
+        ### Understanding Put-Call Parity
 
         #### 1. **Definition of Put-Call Parity**
         Put-Call Parity is a fundamental principle in options pricing that shows the relationship between the prices of European put and call options. It states that the value of a call option, combined with the present value of the exercise price, should be equal to the value of a put option and the current stock price. The equation is expressed as:
 
-        $$ Ct + X / (1+r)^T = S + Pt $$
+        $$ C_t + \frac{X}{(1+r)^T} = S + P_t $$
 
         Where:
         - \( Ct \) = Call option price
@@ -524,25 +609,25 @@ def app():
         - \( r \) = Risk-free rate
         - \( T \) = Time to maturity
 
-        #### 2. **Call Option Price (Ct) vs Stock Price (S)**
-        - **Graph Overview**: This graph illustrates the price of a call option (Ct) as the stock price (S) varies.
+        #### 2. **Call Option Price \( C_t \) vs Stock Price \( S \)**
+        - **Graph Overview**: This graph illustrates the price of a call option (\( C_t \)) as the stock price (\( S \)) varies.
         - **Key Insights**:
-        - The call option price increases as the stock price increases.
-        - This behavior reflects the potential value of exercising the option if the stock price exceeds the exercise price.
+            - The call option price increases as the stock price increases.
+            - This behavior reflects the potential value of exercising the option if the stock price exceeds the exercise price.
 
-        #### 3. **Present Value of Exercise Price (X / (1+r)^T)**
+        #### 3. **Present Value of Exercise Price**
         - **Graph Overview**: This graph shows the present value of the exercise price, which is calculated by discounting the exercise price \( X \) by the risk-free rate \( r \) over the time to maturity \( T \).
         - **Key Insights**:
-        - The present value of the exercise price remains constant across different stock prices.
-        - A higher risk-free rate decreases the present value, making it cheaper to exercise the option in the future.
+            - The present value of the exercise price remains constant across different stock prices.
+            - A higher risk-free rate decreases the present value, making it cheaper to exercise the option in the future.
 
         #### 4. **Put-Call Parity (Combined Graph)**
         - **Graph Overview**: The combined graph shows the Left-Hand Side (LHS) and Right-Hand Side (RHS) of the Put-Call Parity equation as stock prices vary.
-        - **LHS**: \( Ct + X / (1+r)^T \) - The sum of the call option price and the present value of the exercise price.
-        - **RHS**: \( S + Pt \) - The sum of the stock price and the put option price.
+        - **LHS**: $$ C_t + \frac{X}{(1+r)^T} $$ - The sum of the call option price and the present value of the exercise price.
+        - **RHS**: $$ S + P_t $$- The sum of the stock price and the put option price.
         - **Key Insights**:
-        - The Put-Call Parity relationship holds when the LHS and RHS lines overlap, demonstrating that both sides of the equation yield the same value.
-        - Deviations from this parity can indicate potential arbitrage opportunities.
+            - The Put-Call Parity relationship holds when the LHS and RHS lines overlap, demonstrating that both sides of the equation yield the same value.
+            - Deviations from this parity can indicate potential arbitrage opportunities.
 
         #### 5. **Implications of Put-Call Parity**
         - **Arbitrage Opportunities**: If the Put-Call Parity does not hold, traders can exploit this by buying undervalued options and selling overvalued ones.
@@ -551,6 +636,7 @@ def app():
 
         By understanding Put-Call Parity, you gain insights into the interconnected nature of option pricing and the importance of market equilibrium in financial markets.
         """)
+
     
     elif st.session_state.page == "Intrinsic Payoff":
         st.title('Intrinsic Payoff vs. Stock Price')

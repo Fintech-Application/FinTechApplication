@@ -164,7 +164,7 @@ def oil_hedging():
 
     # Oil price range inputs
     oil_price_min = st.number_input("Minimum Oil Price (P) ($)", min_value=1, value=51, step=1)
-    oil_price_max = st.number_input("Maximum Oil Price (P) ($)", min_value=oil_price_min + 1, value=53, step=1)
+    oil_price_max = st.number_input("Maximum Oil Price (P) ($)", min_value=oil_price_min + 1, value=oil_price_min + 2, step=1)
 
     # Define oil prices dynamically
     prices = np.arange(oil_price_min, oil_price_max + 1, 1)
@@ -184,9 +184,11 @@ def oil_hedging():
     ax.plot(prices, futures_profit_per_barrel, label="Futures Profits per Barrel", marker="o", linestyle="-")
     ax.plot(prices, total_proceeds_per_barrel, label="Total Proceeds per Barrel", marker="o", linestyle="--")
 
-    # Y-axis adjustments (Proceeds per barrel from -10 to 60)
-    ax.set_yticks(np.arange(-10, 61, 10))
-    ax.set_ylim(-10, 60)
+    # **Set dynamic Y-axis limits based on the computed values**
+    y_min = min(np.min(revenue_per_barrel), np.min(futures_profit_per_barrel), np.min(total_proceeds_per_barrel)) - 5
+    y_max = max(np.max(revenue_per_barrel), np.max(futures_profit_per_barrel), np.max(total_proceeds_per_barrel)) + 5
+
+    ax.set_ylim(y_min, y_max)  # Dynamically adjust the Y-axis range
 
     # Axis labels and title
     ax.set_xlabel("Oil Price in February ($)")
@@ -198,6 +200,7 @@ def oil_hedging():
 
     # Show plot in Streamlit
     st.pyplot(fig)
+
 
 def app():
     page = st.sidebar.selectbox("Select Page", ["Market Efficiency Description", "Task", "Oil Hedging"])
