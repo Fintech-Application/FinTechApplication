@@ -164,7 +164,10 @@ def oil_hedging():
 
     # Oil price range inputs
     oil_price_min = st.number_input("Minimum Oil Price (P) ($)", min_value=1, value=51, step=1)
-    oil_price_max = st.number_input("Maximum Oil Price (P) ($)", min_value=oil_price_min + 1, value=oil_price_min + 2, step=1)
+    oil_price_max = st.number_input("Maximum Oil Price (P) ($)", 
+                                min_value=oil_price_min + 1, 
+                                value=max(oil_price_min + 2, oil_price_min + 1),  # Ensures valid default
+                                step=1)
 
     # Define oil prices dynamically
     prices = np.arange(oil_price_min, oil_price_max + 1, 1)
