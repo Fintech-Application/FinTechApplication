@@ -273,11 +273,20 @@ def binomial_option_pricing(S0, U, d, C, S_up, S_down, payoff_up, payoff_down):
 
     return fig
 
+def calculate_covered_call(stock_prices, current_price, strike, premium):
+    stock_position = stock_prices - current_price  # Stock payoff
+    short_call_position = np.where(stock_prices > strike, -(stock_prices - strike), 0)  # Written call payoff
+    total_covered_call = stock_position + short_call_position  # Covered call payoff
+    total_profit = total_covered_call + premium  # Total profit with premium
+
+    return stock_position, short_call_position, total_covered_call, total_profit
+
+
 def app():
     st.title("Option Analysis")
 
     # Sidebar for page navigation
-    page = st.sidebar.selectbox("Select Page", ["Options Description","Static Call Option Price vs Stock Price", "Static Put Option Price vs Stock Price", "Call Option Price vs Stock Price", "Put Option Price vs Stock Price", "Compare Call option prices","Compare Put option prices" ,"Put-Call Parity", "Intrinsic Payoff", "Binomial Option Pricing"])
+    page = st.sidebar.selectbox("Select Page", ["Options Description","Static Call Option Price vs Stock Price", "Static Put Option Price vs Stock Price", "Call Option Price vs Stock Price", "Put Option Price vs Stock Price", "Compare Call option prices","Compare Put option prices" ,"Options Strategies (Covered Call)", "Options Strategies (Predictive Put)", "Put-Call Parity", "Intrinsic Payoff", "Binomial Option Pricing"])
 
     # Track the current page
     if "page" not in st.session_state:
@@ -570,8 +579,50 @@ def app():
         6. **Practical Application**:  
         The comparison clarifies how the Black-Scholes model prices options under various scenarios, making theoretical dynamics accessible and actionable for market participants.
         """)
+    
+    elif st.session_state.page == "Options Strategies (Covered Call)":
+        st.title("Options Strategies (Covered Call)")
 
-        
+        # **User Inputs (Dynamic)**
+        current_stock_price = st.slider("Current Stock Price", min_value=50, max_value=300, value=120, step=5)
+        strike_price = st.slider("Strike Price", min_value=current_stock_price, max_value=300, value=140, step=5)
+        call_premium = st.slider("Call Premium", min_value=1, max_value=50, value=5, step=1)
+
+        # Create stock price range dynamically
+        stock_prices_at_expiry = np.linspace(current_stock_price * 0.8, current_stock_price * 1.5, 100)
+
+        # Compute payoffs
+        stock_position, short_call_position, total_covered_call, total_profit = calculate_covered_call(
+            stock_prices_at_expiry, current_stock_price, strike_price, call_premium
+        )
+
+        # **Create Subplots**
+        fig, axes = plt.subplots(3, 1, figsize=(8, 12))
+
+        # **Plot Stock Position**
+        axes[0].plot(stock_prices_at_expiry, stock_position, label='Stock Payoff', color='red')
+        axes[0].axvline(strike_price, linestyle='dashed', color='gray', label='Strike Price')
+        axes[0].set_title('A: Stock')
+        axes[0].legend()
+
+        # **Plot Short Call Position**
+        axes[1].plot(stock_prices_at_expiry, short_call_position, label='Written Call Payoff', color='blue')
+        axes[1].axvline(strike_price, linestyle='dashed', color='gray', label='Strike Price')
+        axes[1].set_title('B: Written Call')
+        axes[1].legend()
+
+        # **Plot Covered Call Payoff and Profit**
+        axes[2].plot(stock_prices_at_expiry, total_covered_call, label='Covered Call Payoff', color='green')
+        axes[2].plot(stock_prices_at_expiry, total_profit, label='Covered Call Profit', linestyle='dashed', color='black')
+        axes[2].axvline(strike_price, linestyle='dashed', color='gray', label='Strike Price')
+        axes[2].set_title('C: Covered Call')
+        axes[2].legend()
+
+        # **Display the Dynamic Plot in Streamlit**
+        st.pyplot(fig)
+
+    elif st.session_state.page == "Options Strategies (Predictive Put)":
+        st.title("Option Strategies (Predictive Put)")
 
     elif st.session_state.page == "Put-Call Parity":
         st.title('Put-Call Parity Analysis with Adjustable Parameter')

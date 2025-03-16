@@ -4,6 +4,7 @@ from bonds import app as bonds_app
 from portfolio_theory import app as portfolio_theory_app
 from options import app as options_app
 from market import app as market_app
+from futures import app as futures_app
 
 NAVIGATION_BAR_STYLE = """
     <style>
@@ -52,7 +53,7 @@ def main():
     # Create a dropdown menu for pages
     page_selection = st.sidebar.selectbox(
         "Go to",
-        ["Home", "Stocks", "Bonds", "Portfolio Theory", "Options", "Market Efficiency"]
+        ["Home", "Stocks", "Bonds", "Portfolio Theory", "Options", "Market Efficiency", "Futures"]
     )
 
     # Display content based on selection
@@ -69,6 +70,8 @@ def main():
         options_app()
     elif page_selection == "Market Efficiency":
         market_app()
+    elif page_selection == "Futures":
+        futures_app()
     
 
 if __name__ == '__main__':
