@@ -294,7 +294,7 @@ def app():
     st.title("Option Analysis")
 
     # Sidebar for page navigation
-    page = st.sidebar.selectbox("Select Page", ["Options Description","Static Call Option Price vs Stock Price", "Static Put Option Price vs Stock Price", "Call Option Price vs Stock Price", "Put Option Price vs Stock Price", "Compare Call option prices","Compare Put option prices" ,"Options Strategies (Covered Call)", "Options Strategies (Predictive Put)", "Put-Call Parity", "Intrinsic Payoff", "Binomial Option Pricing"])
+    page = st.sidebar.selectbox("Select Page", ["Options Description","Static Call Option Price vs Stock Price", "Static Put Option Price vs Stock Price", "Call Option Price vs Stock Price", "Put Option Price vs Stock Price", "Compare Call option prices","Compare Put option prices" ,"Options Strategies (Covered Call)", "Options Strategies (Protective Put)", "Put-Call Parity", "Intrinsic Payoff", "Binomial Option Pricing"])
 
     # Track the current page
     if "page" not in st.session_state:
