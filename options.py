@@ -584,9 +584,9 @@ def app():
         st.title("Options Strategies (Covered Call)")
 
         # **User Inputs (Dynamic)**
-        current_stock_price = st.slider("Current Stock Price", min_value=50, max_value=300, value=120, step=5)
-        strike_price = st.slider("Strike Price", min_value=current_stock_price, max_value=300, value=140, step=5)
-        call_premium = st.slider("Call Premium", min_value=1, max_value=50, value=5, step=1)
+        current_stock_price = st.slider("Current Stock Price (St)", min_value=50, max_value=300, value=120, step=5)
+        strike_price = st.slider("Strike Price (K)", min_value=current_stock_price, max_value=300, value=140, step=5)
+        call_premium = st.slider("Call Premium (Co)", min_value=1, max_value=50, value=5, step=1)
 
         # Create stock price range dynamically
         stock_prices_at_expiry = np.linspace(current_stock_price * 0.8, current_stock_price * 1.5, 100)
