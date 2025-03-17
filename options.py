@@ -588,6 +588,10 @@ def app():
         strike_price = st.slider("Exercise Price (k)", min_value=current_stock_price, max_value=300, value=140, step=5)
         call_premium = st.slider("Call Premium (Co)", min_value=1, max_value=50, value=5, step=1)
 
+        # **Validation Warning**
+        if strike_price < current_stock_price:
+            st.warning("Strike Price (Exercise Price) cannot be set below the Current Stock Price.")
+
         # Create stock price range dynamically
         stock_prices_at_expiry = np.linspace(current_stock_price * 0.8, current_stock_price * 1.5, 100)
 
