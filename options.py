@@ -281,6 +281,14 @@ def calculate_covered_call(stock_prices, current_price, strike, premium):
 
     return stock_position, short_call_position, total_covered_call, total_profit
 
+def calculate_protective_put(stock_prices, current_stock_price, put_strike_price, put_premium):
+    stock_payoff = stock_prices  
+    long_put_payoff = np.maximum(put_strike_price - stock_prices, 0)
+    protective_put_payoff = stock_payoff + long_put_payoff  
+    total_profit = protective_put_payoff - current_stock_price - put_premium  
+
+    return stock_payoff, long_put_payoff, protective_put_payoff, total_profit
+
 
 def app():
     st.title("Option Analysis")
@@ -625,8 +633,47 @@ def app():
         # **Display the Dynamic Plot in Streamlit**
         st.pyplot(fig)
 
-    elif st.session_state.page == "Options Strategies (Predictive Put)":
-        st.title("Option Strategies (Predictive Put)")
+    elif st.session_state.page == "Options Strategies (Protective Put)":
+        st.title("Options Strategies (Protective Put)")
+
+        # **User Inputs (Dynamic)**
+        current_stock_price = st.slider("Current Stock Price", min_value=50, max_value=300, value=120, step=5)
+        put_strike_price = st.slider("Put Strike Price", min_value=50, max_value=current_stock_price, value=100, step=5)
+        put_premium = st.slider("Put Premium", min_value=1, max_value=50, value=5, step=1)
+
+        # **Create stock price range dynamically**
+        stock_prices_at_expiry = np.linspace(current_stock_price * 0.5, current_stock_price * 1.5, 100)
+
+        # Compute payoffs
+        stock_position, long_put_position, total_protective_put, total_profit = calculate_protective_put(
+            stock_prices_at_expiry, current_stock_price, put_strike_price, put_premium
+        )
+
+        # **Create Subplots**
+        fig, axes = plt.subplots(3, 1, figsize=(8, 12))
+
+        # **Plot Stock Position**
+        axes[0].plot(stock_prices_at_expiry, stock_position, label='Stock Payoff', color='red')
+        axes[0].axvline(put_strike_price, linestyle='dashed', color='gray', label='Put Strike Price')
+        axes[0].set_title('A: Stock')
+        axes[0].legend()
+
+        # **Plot Long Put Position**
+        axes[1].plot(stock_prices_at_expiry, long_put_position, label='Long Put Payoff', color='blue')
+        axes[1].axvline(put_strike_price, linestyle='dashed', color='gray', label='Put Strike Price')
+        axes[1].set_title('B: Long Put')
+        axes[1].legend()
+
+        # **Plot Protective Put Payoff and Profit**
+        axes[2].plot(stock_prices_at_expiry, total_protective_put, label='Protective Put Payoff', color='green')
+        axes[2].plot(stock_prices_at_expiry, total_profit, label='Protective Put Profit', linestyle='dashed', color='black')
+        axes[2].axvline(put_strike_price, linestyle='dashed', color='gray', label='Put Strike Price')
+        axes[2].set_title('C: Protective Put')
+        axes[2].legend()
+
+        # **Display the Dynamic Plot in Streamlit**
+        st.pyplot(fig)
+
 
     elif st.session_state.page == "Put-Call Parity":
         st.title('Put-Call Parity Analysis with Adjustable Parameter')
