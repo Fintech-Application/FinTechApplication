@@ -4,6 +4,7 @@ from scipy.stats import norm
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import pandas as pd
 
 # Black-Scholes model functions
 def d1(Stockprice, exerciseprice, maturity, riskfreerate, sigma):
@@ -274,25 +275,57 @@ def binomial_option_pricing(S0, U, d, C, S_up, S_down, payoff_up, payoff_down):
     return fig
 
 def calculate_covered_call(stock_prices, current_price, strike, premium):
-    stock_position = stock_prices - current_price  # Stock payoff
-    short_call_position = np.where(stock_prices > strike, -(stock_prices - strike), 0)  # Written call payoff
-    total_covered_call = stock_position + short_call_position  # Covered call payoff
-    total_profit = total_covered_call + premium  # Total profit with premium
+    # Stock payoff (Long position)
+    stock_position = stock_prices  # Simply St for stock payoff
+    
+    # Short call payoff (0 when St <= strike, -(St - strike) when St > strike)
+    short_call_position = np.where(stock_prices > strike, -(stock_prices - strike), 0)
+    
+    
+    # Covered call payoff (Stock + Short Call)
+    covered_call_payoff = stock_position + short_call_position
+    
+    # Covered call profit (Stock + Short Call Profit)
+    total_profit = np.where(stock_prices <= strike, stock_prices - (current_price - premium), strike - (current_price - premium))
+    
+    return stock_position, short_call_position, covered_call_payoff, total_profit
 
-    return stock_position, short_call_position, total_covered_call, total_profit
+def calculate_protective_put(stock_prices, current_price, strike, premium):
+    # Stock Payoff (Long Position)
+    stock_position = stock_prices  # Simply St for stock payoff
+    
+    # Long Put Payoff
+    long_put_payoff = np.where(stock_prices <= strike, (strike - stock_prices), 0)
+    
+    # Long Put Profit (Payoff - Premium)
+    long_put_profit = np.where(stock_prices <= strike, (strike - stock_prices - premium), -premium)
+    
+    # Protective Put Payoff (Stock + Long Put Payoff)
+    protective_put_payoff = stock_position + long_put_payoff
+    
+    # Protective Put Profit (Stock + Long Put Profit - Initial Cost)
+    total_profit = stock_prices + long_put_profit - (current_price - premium)
+    
+    return stock_position, long_put_payoff, long_put_profit, protective_put_payoff, total_profit
 
-def calculate_protective_put(stock_prices, current_stock_price, put_strike_price, put_premium):
-    stock_payoff = stock_prices  
-    long_put_payoff = np.maximum(put_strike_price - stock_prices, 0)
-    protective_put_payoff = stock_payoff + long_put_payoff  
-    total_profit = protective_put_payoff - current_stock_price - put_premium  
+# Helper function to format axes
+def format_axes(ax):
+    ax.axhline(0, color='black', linewidth=0.8)  # Horizontal axis at y=0
+    ax.axvline(0, color='black', linewidth=0.8)  # Vertical axis at x=0
 
-    return stock_payoff, long_put_payoff, protective_put_payoff, total_profit
+    ax.spines['left'].set_position('zero')
+    ax.spines['bottom'].set_position('zero')
 
+    # Hide the top and right spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    # Add arrows (optional aesthetic)
+    ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
+    ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(), clip_on=False)
 
 def app():
-    st.title("Option Analysis")
-
+   
     # Sidebar for page navigation
     page = st.sidebar.selectbox("Select Page", ["Options Description","Static Call Option Price vs Stock Price", "Static Put Option Price vs Stock Price", "Call Option Price vs Stock Price", "Put Option Price vs Stock Price", "Compare Call option prices","Compare Put option prices" ,"Options Strategies (Covered Call)", "Options Strategies (Protective Put)", "Put-Call Parity", "Intrinsic Payoff", "Binomial Option Pricing"])
 
@@ -592,8 +625,8 @@ def app():
         st.title("Options Strategies (Covered Call)")
 
         # **User Inputs (Dynamic)**
-        current_stock_price = st.slider("Current Stock Price (St)", min_value=50, max_value=300, value=120, step=5)
-        strike_price = st.slider("Exercise Price (k)", min_value=current_stock_price, max_value=300, value=140, step=5)
+        current_stock_price = st.slider("Current Stock Price (St)", min_value=50, max_value=300, value=100, step=5)
+        strike_price = st.slider("Exercise Price (k)", min_value=current_stock_price, max_value=300, value=110, step=5)
         call_premium = st.slider("Call Premium (Co)", min_value=1, max_value=50, value=5, step=1)
 
         # **Validation Warning**
@@ -601,79 +634,241 @@ def app():
             st.warning("Strike Price (Exercise Price) cannot be set below the Current Stock Price.")
 
         # Create stock price range dynamically
-        stock_prices_at_expiry = np.linspace(current_stock_price * 0.8, current_stock_price * 1.5, 100)
+        stock_prices_at_expiry = np.linspace(0, current_stock_price * 1.5, 100)
 
-        # Compute payoffs
-        stock_position, short_call_position, total_covered_call, total_profit = calculate_covered_call(
+            # Compute payoffs
+        stock_position, short_call_position, covered_call_payoff, total_profit = calculate_covered_call(
             stock_prices_at_expiry, current_stock_price, strike_price, call_premium
         )
 
         # **Create Subplots**
         fig, axes = plt.subplots(3, 1, figsize=(8, 12))
 
-        # **Plot Stock Position**
+        # Plot A: Stock
         axes[0].plot(stock_prices_at_expiry, stock_position, label='Stock Payoff', color='red')
-        axes[0].axvline(strike_price, linestyle='dashed', color='gray', label='Strike Price')
+        axes[0].axvline(strike_price, linestyle='dashed', color='gray', label=f'Strike Price: {strike_price}')
         axes[0].set_title('A: Stock')
         axes[0].legend()
+        axes[0].set_ylabel("Payoff")
+        axes[0].set_ylim(0, max(stock_position) * 1.1)
+        axes[0].set_aspect('equal')
+        axes[0].legend(loc='center left', bbox_to_anchor=(1.5, 0.5))  # Move legend to side
+        format_axes(axes[0])  # 👈 Add this line
 
-        # **Plot Short Call Position**
+        # Plot B: Written Call
         axes[1].plot(stock_prices_at_expiry, short_call_position, label='Written Call Payoff', color='blue')
-        axes[1].axvline(strike_price, linestyle='dashed', color='gray', label='Strike Price')
+        axes[1].axvline(strike_price, linestyle='dashed', color='gray', label=f'Strike Price: {strike_price}')
         axes[1].set_title('B: Written Call')
         axes[1].legend()
+        axes[1].set_ylabel("Payoff")
+        axes[1].set_ylim(min(short_call_position) * 1.1, 10)  # Handles negative payoffs
+        axes[1].set_aspect('equal')
+        format_axes(axes[1])  # 👈 Add this line
 
-        # **Plot Covered Call Payoff and Profit**
-        axes[2].plot(stock_prices_at_expiry, total_covered_call, label='Covered Call Payoff', color='green')
+        # Plot C: Covered Call
+        axes[2].plot(stock_prices_at_expiry, covered_call_payoff, label='Covered Call Payoff', color='green')
         axes[2].plot(stock_prices_at_expiry, total_profit, label='Covered Call Profit', linestyle='dashed', color='black')
-        axes[2].axvline(strike_price, linestyle='dashed', color='gray', label='Strike Price')
+        axes[2].axvline(strike_price, linestyle='dashed', color='gray', label=f'Strike Price: {strike_price}')
         axes[2].set_title('C: Covered Call')
         axes[2].legend()
+        axes[2].set_ylabel("Payoff")
+        axes[2].set_ylim(min(min(total_profit), min(covered_call_payoff)) * 1.1, max(covered_call_payoff) * 1.1)
+        axes[2].set_aspect('equal')
+        axes[2].legend(loc='center left', bbox_to_anchor=(1.5, 0.5))  # Move legend to side
+        format_axes(axes[2])  # 👈 Add this line
 
         # **Display the Dynamic Plot in Streamlit**
         st.pyplot(fig)
+        
+
+        # **Create Tables for Each Graph**
+        
+        # 📊 **Stock Payoff Table**
+        stock_df = pd.DataFrame({
+            "Stock Price (St)": stock_prices_at_expiry,
+            "Stock Payoff": stock_position
+        })
+
+        # 📊 **Written Call Payoff Table**
+        short_call_df = pd.DataFrame({
+            "Stock Price (St)": stock_prices_at_expiry,
+            "Written Call Payoff": short_call_position
+        })
+
+        # 📊 **Covered Call Payoff & Profit Table**
+        covered_call_df = pd.DataFrame({
+            "Stock Price (St)": stock_prices_at_expiry,
+            "Covered Call Payoff": covered_call_payoff,
+            "Covered Call Profit": total_profit
+        })
+
+        # Create 3 equal columns
+        col1, col2, col3 = st.columns(3)
+
+        # 📊 Stock Payoff Table
+        with col1:
+            st.subheader("Stock Payoff")
+            st.dataframe(stock_df)
+
+        # 📊 Written Call Payoff Table
+        with col2:
+            st.subheader("Written Call Payoff")
+            st.dataframe(short_call_df)
+
+        # 📊 Covered Call Payoff & Profit Table
+        with col3:
+            st.subheader("Covered Call")
+            st.dataframe(covered_call_df)
+
+        st.markdown("""
+        ## 💡 Strategy Overview: Covered Call
+
+        A **Covered Call** is an options strategy where an investor **holds a long position in a stock** and **sells (writes) a call option** on the same stock to generate income from the premium.
+
+        ### 🔍 Key Characteristics:
+
+        - **Objective**: Earn extra income through the premium, while holding the stock.
+        - **Best Case**: Stock closes at or just below the strike price — you keep the premium and any gains in stock price.
+        - **Worst Case**: Stock drops significantly — you incur losses on the stock, offset partially by the premium received.
+
+        ### 📈 Components:
+
+        - **Stock Payoff**: The value of the stock at expiration.
+        - **Written Call Payoff**: If the stock price exceeds the strike, the call is exercised, and you may have to sell the stock at a lower price than the market.
+        - **Covered Call Payoff**: Combination of stock and written call payoff.
+        - **Profit**: Accounts for the premium received and initial stock cost.
+
+        ### 💰 Profit & Loss:
+
+        - **Maximum Profit**:  Strike Price - Current Stock Price + Call Premium
+        
+        - **Maximum Loss**:  Current Stock Price - Call Premium
+
+        - **Breakeven Point**:  Current Stock Price - Call Premium
+
+        ### 📌 Use Case:
+
+        Covered calls are ideal for **moderately bullish** investors who want to earn extra income (premium) and are willing to cap upside potential.
+
+        ---
+        """)
+
 
     elif st.session_state.page == "Options Strategies (Protective Put)":
         st.title("Options Strategies (Protective Put)")
 
-        # **User Inputs (Dynamic)**
-        current_stock_price = st.slider("Current Stock Price", min_value=50, max_value=300, value=120, step=5)
-        put_strike_price = st.slider("Put Strike Price", min_value=50, max_value=current_stock_price, value=100, step=5)
-        put_premium = st.slider("Put Premium", min_value=1, max_value=50, value=5, step=1)
+        # **User Inputs**
+        current_stock_price = st.slider("Current Stock Price (St)", min_value=50, max_value=300, value=120, step=5)
+        put_strike_price = st.slider("Put Strike Price (k)", min_value=50, max_value=300, value=100, step=5)
+        put_premium = st.slider("Put Premium (p)", min_value=1, max_value=50, value=5, step=1)
 
-        # **Create stock price range dynamically**
-        stock_prices_at_expiry = np.linspace(current_stock_price * 0.5, current_stock_price * 1.5, 100)
+        # **Validation Warning**
+        if put_strike_price > current_stock_price:
+            st.warning("Strike Price is above the Current Stock Price. This is an In-The-Money (ITM) Put.")
 
-        # Compute payoffs
-        stock_position, long_put_position, total_protective_put, total_profit = calculate_protective_put(
+        # **Stock Price Range**
+        stock_prices_at_expiry = np.linspace(0, current_stock_price * 1.5, 100)
+
+        # **Compute Payoffs**
+        stock_position, long_put_payoff, long_put_profit, protective_put_payoff, total_profit = calculate_protective_put(
             stock_prices_at_expiry, current_stock_price, put_strike_price, put_premium
         )
 
         # **Create Subplots**
         fig, axes = plt.subplots(3, 1, figsize=(8, 12))
 
-        # **Plot Stock Position**
+        # **A: Stock Position**
         axes[0].plot(stock_prices_at_expiry, stock_position, label='Stock Payoff', color='red')
-        axes[0].axvline(put_strike_price, linestyle='dashed', color='gray', label='Put Strike Price')
+        axes[0].axvline(put_strike_price, linestyle='dashed', color='gray', label=f'Put Strike: {put_strike_price}')
         axes[0].set_title('A: Stock')
         axes[0].legend()
+        axes[0].set_ylabel("Payoff")
+        axes[0].set_xlim(min(stock_prices_at_expiry), max(stock_prices_at_expiry))
+        axes[0].set_ylim(0, max(stock_position) * 1.1)  # Start from 0
+        axes[0].set_aspect('equal')
+        axes[0].legend(loc='center left', bbox_to_anchor=(1.25, 0.5))
+        format_axes(axes[0])
 
-        # **Plot Long Put Position**
-        axes[1].plot(stock_prices_at_expiry, long_put_position, label='Long Put Payoff', color='blue')
-        axes[1].axvline(put_strike_price, linestyle='dashed', color='gray', label='Put Strike Price')
+        # **B: Long Put Payoff**
+        axes[1].plot(stock_prices_at_expiry, long_put_payoff, label='Long Put Payoff', color='blue')
+        axes[1].axvline(put_strike_price, linestyle='dashed', color='gray', label=f'Put Strike: {put_strike_price}')
         axes[1].set_title('B: Long Put')
         axes[1].legend()
-
-        # **Plot Protective Put Payoff and Profit**
-        axes[2].plot(stock_prices_at_expiry, total_protective_put, label='Protective Put Payoff', color='green')
+        axes[1].set_ylabel("Payoff")
+        axes[1].set_xlim(min(stock_prices_at_expiry), max(stock_prices_at_expiry))
+        axes[1].set_ylim(min(long_put_payoff) * 1.1, max(long_put_payoff) * 1.1)
+        axes[1].set_aspect('equal')
+        format_axes(axes[1])
+        
+        # **C: Protective Put Payoff vs. Profit**
+        axes[2].plot(stock_prices_at_expiry, protective_put_payoff, label='Protective Put Payoff', color='green')
         axes[2].plot(stock_prices_at_expiry, total_profit, label='Protective Put Profit', linestyle='dashed', color='black')
-        axes[2].axvline(put_strike_price, linestyle='dashed', color='gray', label='Put Strike Price')
+        axes[2].axvline(put_strike_price, linestyle='dashed', color='gray', label=f'Put Strike: {put_strike_price}')
         axes[2].set_title('C: Protective Put')
         axes[2].legend()
+        axes[2].set_ylabel("Payoff / Profit")
+        axes[2].set_xlim(min(stock_prices_at_expiry), max(stock_prices_at_expiry))
+        axes[2].set_ylim(min(total_profit) * 1.1, max(protective_put_payoff) * 1.1)
+        axes[2].set_aspect('equal')
+        axes[2].legend(loc='center left', bbox_to_anchor=(1.25, 0.5))
+        format_axes(axes[2])
 
         # **Display the Dynamic Plot in Streamlit**
         st.pyplot(fig)
 
+        # 📊 Create DataFrames
+        stock_df = pd.DataFrame({
+            "Stock Price (St)": stock_prices_at_expiry,
+            "Stock Payoff": stock_position
+        })
+
+        long_put_df = pd.DataFrame({
+            "Stock Price (St)": stock_prices_at_expiry,
+            "Long Put Payoff": long_put_payoff
+        })
+
+        protective_put_df = pd.DataFrame({
+            "Stock Price (St)": stock_prices_at_expiry,
+            "Protective Put Payoff": protective_put_payoff,
+            "Protective Put Profit": total_profit
+        })
+
+        # 📊 Display side-by-side using Streamlit columns
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.subheader("Stock Payoff")
+            st.dataframe(stock_df)
+
+        with col2:
+            st.subheader("Long Put Payoff")
+            st.dataframe(long_put_df)
+
+        with col3:
+            st.subheader("Protective Put")
+            st.dataframe(protective_put_df)
+
+        st.markdown("""
+        ### 🛡️ What is a Protective Put?
+
+        A **Protective Put** strategy involves **buying a stock** and **buying a put option** on the same stock. It acts like an **insurance policy** for investors:
+
+        - You remain **long** on the stock (expecting it to go up).
+        - You buy a **put option** with a strike price \( K \), paying a **premium** \( P \), which gives you the right to sell the stock at \( K \) if prices fall.
+
+        ### 💡 When and Why to Use It?
+
+        - If you're **bullish** on the stock but want **downside protection**.
+        - It **limits your losses** while keeping your upside open.
+
+        ### 🔍 Key Characteristics:
+
+        - **Maximum Loss:** Limited to (St - K + P)
+        - **Maximum Profit:** Unlimited, depending on how high the stock goes.
+        - **Breakeven Point:** \( St + P \)
+
+        This strategy is ideal for conservative investors looking to participate in the market while managing risk.
+        """)
 
     elif st.session_state.page == "Put-Call Parity":
         st.title('Put-Call Parity Analysis with Adjustable Parameter')
@@ -788,6 +983,62 @@ def app():
         st.subheader("Binomial Price Tree")
         fig = binomial_option_pricing(S0, U, d, C, S_up, S_down, payoff_up, payoff_down)
         st.pyplot(fig)
+
+        st.markdown("""
+        ## 🧠 Understanding Binomial Option Pricing
+
+        The **Binomial Option Pricing Model** is a method to value options by simulating possible price paths.
+
+        ---
+
+        ### 🧩 Key Definitions
+
+        - **$S_0$**: Current stock price  
+        - **$U$**: Upward movement multiplier (e.g., 1.2 = +20%)  
+        - **$d$**: Downward movement multiplier (e.g., 0.9 = -10%)  
+        - **$X$**: Strike price of the option  
+        - **$r$**: Risk-free interest rate  
+        - **$C$**: Current call option price  
+
+        ---
+
+        ### 🔁 One-Step Binomial Tree Payoffs
+
+        - If the stock goes **up**:
+        - $S_u = S_0 \\times U$
+        - $\\text{Payoff}_{\\text{up}} = \\max(S_u - X, 0)$
+
+        - If the stock goes **down**:
+        - $S_d = S_0 \\times d$
+        - $\\text{Payoff}_{\\text{down}} = \\max(S_d - X, 0)$
+
+        ---
+
+        ### 📉 Risk-Neutral Probability
+
+        $$
+        p = \\frac{e^{rT} - d}{U - d}
+        $$
+
+        ---
+
+        ### 💵 Call Option Price
+
+        $$
+        C = \\frac{1}{e^{rT}} \\left( p \\cdot \\text{Payoff}_{\\text{up}} + (1 - p) \\cdot \\text{Payoff}_{\\text{down}} \\right)
+        $$
+
+        ---
+
+        ### 📊 Hedge Ratio (Delta)
+
+        $$
+        \\Delta = \\frac{\\text{Payoff}_{\\text{up}} - \\text{Payoff}_{\\text{down}}}{S_u - S_d}
+        $$
+        """)
+
+
+
     
 if __name__ == "__main__":
     app()

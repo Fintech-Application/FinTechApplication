@@ -1,11 +1,10 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from io import BytesIO
 import numpy as np
 
 def futures_definition():
     # Title
-    st.title("Understanding futures")
+    st.title("Understanding Futures")
 
 def oil_hedging():
     st.title("Oil Price Hedging Simulator")
@@ -19,15 +18,18 @@ def oil_hedging():
 
     # Contract size is fixed
     contract_size = 1000  
-    num_contracts = num_barrels // contract_size  # Automatically calculate contracts
+    auto_num_contracts = num_barrels // contract_size  # Automatically calculate contracts
+    
+    # User input for number of contracts
+    num_contracts = st.number_input("Number of Contracts", min_value=1, value=auto_num_contracts, step=1)
 
     # Oil price range inputs
     oil_price_min = st.number_input("Minimum Oil Price (P) ($)", min_value=1, value=51, step=1)
     oil_price_max = st.number_input("Maximum Oil Price (P) ($)", 
-                                min_value=oil_price_min + 1, 
-                                value=max(oil_price_min + 2, oil_price_min + 1),  # Ensures valid default
-                                step=1)
-
+                                    min_value=oil_price_min + 1, 
+                                    value=max(oil_price_min + 2, oil_price_min + 1),
+                                    step=1)
+    
     # Define oil prices dynamically
     prices = np.arange(oil_price_min, oil_price_max + 1, 1)
 
@@ -37,7 +39,7 @@ def oil_hedging():
     total_proceeds_per_barrel = revenue_per_barrel + futures_profit_per_barrel  # Total proceeds per barrel
 
     # Display number of contracts used for hedging
-    st.write(f"**Number of Contracts:** {num_contracts} (Each contract = {contract_size} barrels)")
+    st.write(f"**Number of Contracts Used:** {num_contracts} (Each contract = {contract_size} barrels)")
 
     # Create plot
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -46,7 +48,7 @@ def oil_hedging():
     ax.plot(prices, futures_profit_per_barrel, label="Futures Profits per Barrel", marker="o", linestyle="-")
     ax.plot(prices, total_proceeds_per_barrel, label="Total Proceeds per Barrel", marker="o", linestyle="--")
 
-    # **Set dynamic Y-axis limits based on the computed values**
+    # Set dynamic Y-axis limits based on the computed values
     y_min = min(np.min(revenue_per_barrel), np.min(futures_profit_per_barrel), np.min(total_proceeds_per_barrel)) - 5
     y_max = max(np.max(revenue_per_barrel), np.max(futures_profit_per_barrel), np.max(total_proceeds_per_barrel)) + 5
 
@@ -63,7 +65,6 @@ def oil_hedging():
     # Show plot in Streamlit
     st.pyplot(fig)
 
-
 def app():
     page = st.sidebar.selectbox("Select Page", ["Futures Description", "Oil Hedging"])
 
@@ -76,7 +77,6 @@ def app():
         futures_definition()
     elif st.session_state.page == "Oil Hedging":
         oil_hedging()
-
 
 if __name__ == "__main__":
     app()
