@@ -1003,7 +1003,6 @@ def app():
         ---
 
         ### 🔁 One-Step Binomial Tree Payoffs
-
         - If the stock goes **up**:
         - $S_u = S_0 \\times U$
         - $\\text{Payoff}_{\\text{up}} = \\max(S_u - X, 0)$
@@ -1013,7 +1012,6 @@ def app():
         - $\\text{Payoff}_{\\text{down}} = \\max(S_d - X, 0)$
 
         ---
-
         ### 📉 Risk-Neutral Probability
 
         $$
