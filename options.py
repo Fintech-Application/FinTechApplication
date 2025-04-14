@@ -750,7 +750,6 @@ def app():
 
         Covered calls are ideal for **moderately bullish** investors who want to earn extra income (premium) and are willing to cap upside potential.
 
-        ---
         """)
 
 
