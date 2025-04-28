@@ -6,6 +6,8 @@ from options import app as options_app
 from market import app as market_app
 from futures import app as futures_app
 
+#Checking commit twinkle
+
 NAVIGATION_BAR_STYLE = """
     <style>
         /* Adjust the sidebar background color */
