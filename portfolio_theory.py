@@ -469,7 +469,7 @@ def Annual_SP500_returns_API():
     bins = np.arange(-45, 65, 5)  # Create bins from -45 to 60 with a step of 5
 
     # Cut the annual returns into the specified bins
-    binned_returns = pd.cut(annual_returns, bins=bins, right=False)
+    binned_returns = pd.cut(annual_returns.values, bins=bins, right=False)
 
     # Count the number of observations in each bin
     freq = binned_returns.value_counts().sort_index()
