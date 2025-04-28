@@ -884,6 +884,7 @@ def historical_sharpe_ratio():
 
     # Fetch S&P 500 data from Yahoo Finance
     sp500 = yf.download('^GSPC', start=f'{start_year}-01-01', end=f'{end_year}-12-31', progress=False)
+    sp500.columns = sp500.columns.get_level_values(0)  # Flatten multi-level columns
     sp500['Monthly Return'] = sp500['Adj Close'].pct_change()
 
     # Fetch 3-month Treasury bill data from FRED
