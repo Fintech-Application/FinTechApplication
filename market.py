@@ -148,7 +148,6 @@ def task():
     3. https://fortune.com/2025/01/27/nvidia-deepseek-rout-tech-stocks/
     """)
 
-
 def app():
     page = st.sidebar.selectbox("Select Page", ["Market Efficiency Description", "Task"])
 

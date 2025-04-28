@@ -434,6 +434,7 @@ def Annual_tbill_returns_API():
     """)
 
 def Annual_SP500_returns_API():
+    # Initialize FRED (but not used now)
     fred = Fred(api_key=DEFAULT_API_KEY)
 
     # Streamlit app title
@@ -441,25 +442,28 @@ def Annual_SP500_returns_API():
 
     # Sidebar for user input
     st.sidebar.header('Input Parameters')
-    # series_id = st.sidebar.text_input('FRED Series ID', 'SP500')
     ticker = st.sidebar.text_input('Ticker Symbol', '^GSPC')
     start_date = st.sidebar.date_input('Start Date', pd.to_datetime('1927-01-01'))
     end_date = st.sidebar.date_input('End Date', pd.to_datetime('today'))
 
-    # # Fetching S&P 500 data from FRED
-    # sp500_data = fred.get_series(series_id, observation_start=start_date.strftime('%Y-%m-%d'), observation_end=end_date.strftime('%Y-%m-%d'))
-
-    # Step 1: Download the market index data (S&P 500 in this example)
+    # Download S&P 500 data
     sp500_data = yf.download(ticker, start=start_date, end=end_date)
 
+    # Flatten columns if MultiIndex
+    if isinstance(sp500_data.columns, pd.MultiIndex):
+        sp500_data.columns = sp500_data.columns.get_level_values(0)
+
+    # Use 'Close' price instead of 'Adj Close'
+    close_prices = sp500_data['Close']
+
     # Calculate annual returns
-    sp500_data = sp500_data['Adj Close'].resample('Y').last()  # Resample to annual data
-    annual_returns = sp500_data.pct_change().dropna() * 100  # Calculate annual returns in percentage
+    close_prices_annual = close_prices.resample('Y').last()
+    annual_returns = close_prices_annual.pct_change().dropna() * 100
 
     # Create bins and labels
-    bins = np.arange(-45, 65, 5)  # Create bins from -45 to 60 with a step of 5
+    bins = np.arange(-45, 65, 5)
 
-    # Cut the annual returns into the specified bins
+    # Cut the annual returns into specified bins
     binned_returns = pd.cut(annual_returns, bins=bins, right=False)
 
     # Count the number of observations in each bin
@@ -468,45 +472,45 @@ def Annual_SP500_returns_API():
     # Convert counts to percentages
     freq_percentage = (freq / freq.sum()) * 100
 
-    # Plotting the bar graph
+    # Plotting
     plt.figure(figsize=(12, 8))
     plt.bar(freq_percentage.index.astype(str), freq_percentage, width=0.8, edgecolor='black')
     plt.xlabel('Return Ranges (%)')
     plt.ylabel('Percentage of Observations (%)')
-    plt.title('Frequency Distribution of Annual S&P 500 Returns (1927-2023)')
+    plt.title('Frequency Distribution of Annual S&P 500 Returns')
     plt.xticks(rotation=45)
     plt.yticks(np.arange(0, freq_percentage.max() + 5, 5))
     plt.grid(axis='y')
 
-    # Display the plot
+    # Display plot
     st.pyplot(plt.gcf())
 
+    # Additional text
     st.write("""
     ## Instructions and Conceptual Understanding:
 
     1. **Input Parameters:**
-       - Use the sidebar to enter the ticker symbol (e.g., '^GSPC') and select the start and end dates to fetch data.
+       - Enter the ticker (e.g., '^GSPC') and select start/end dates.
 
     2. **Data Fetching:**
-       - The app retrieves historical closing prices of the specified market index (S&P 500) from Yahoo Finance.
+       - Fetches daily close prices from Yahoo Finance.
 
     3. **Annual Returns Calculation:**
-       - The annual returns are calculated as the percentage change in adjusted closing prices, resampled to the last trading day of each year.
+       - Uses last trading day close price of each year to calculate returns.
 
     4. **Binning and Frequency Calculation:**
-       - The annual returns are divided into specified bins ranging from -45% to 60% with a step of 5%.
-       - The frequency of observations within each bin is counted and converted to a percentage.
+       - Annual returns binned into -45% to +60% in steps of 5%.
 
     5. **Plot Interpretation:**
-       - The bar graph displays the percentage of observations within each return range over the specified period.
+       - Displays how often different return ranges occurred historically.
     """)
 
     st.write("""
-    ## Formulas:
+    ## Formula:
     """)
 
     st.latex(r"""
-    \text{Annual Return} = \left( \frac{\text{Adj Close}_{\text{end}}}{\text{Adj Close}_{\text{start}}} \right) - 1 \times 100
+    \text{Annual Return} = \left( \frac{\text{Close}_{\text{End of Year}}}{\text{Close}_{\text{Start of Year}}} - 1 \right) \times 100
     """)
 
 def Annualized_Std_Dev_Sp500():
