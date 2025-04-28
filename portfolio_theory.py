@@ -452,9 +452,18 @@ def Annual_SP500_returns_API():
     # Step 1: Download the market index data (S&P 500 in this example)
     sp500_data = yf.download(ticker, start=start_date, end=end_date)
 
-    # Calculate annual returns
-    sp500_data = sp500_data['Adj Close'].resample('Y').last()  # Resample to annual data
-    annual_returns = sp500_data.pct_change().dropna() * 100  # Calculate annual returns in percentage
+    # Check if 'Adj Close' exists, otherwise fallback to 'Close'
+    if 'Adj Close' in sp500_data.columns:
+        price_data = sp500_data['Adj Close']
+    elif 'Close' in sp500_data.columns:
+        price_data = sp500_data['Close']
+    else:
+        st.error("Neither 'Adj Close' nor 'Close' prices are available for the selected ticker.")
+        return
+
+    # Resample to annual data
+    price_data = price_data.resample('Y').last()
+    annual_returns = price_data.pct_change().dropna() * 100  # Calculate annual returns in percentage
 
     # Create bins and labels
     bins = np.arange(-45, 65, 5)  # Create bins from -45 to 60 with a step of 5
