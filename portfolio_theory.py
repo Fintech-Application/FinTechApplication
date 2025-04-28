@@ -529,13 +529,13 @@ def Annualized_Std_Dev_Sp500():
     data = yf.download(ticker, start=start_date, end=end_date, interval='1d')
 
     # Step 2: Calculate daily returns
-    data['Daily_Return'] = data['Adj Close'].pct_change()
+    data['Daily_Return'] = data['Close'].pct_change()
 
     # Step 3: Resample to monthly frequency
     monthly_data = data.resample('M').last()
 
     # Step 4: Calculate monthly returns
-    monthly_data['Monthly_Return'] = monthly_data['Adj Close'].pct_change()
+    monthly_data['Monthly_Return'] = monthly_data['Close'].pct_change()
 
     # Step 5: Fetch historical risk-free rate data from FRED
     risk_free_rate_data = fred.get_series('TB3MS', observation_start=start_date.strftime('%Y-%m-%d'), observation_end=end_date.strftime('%Y-%m-%d'))
