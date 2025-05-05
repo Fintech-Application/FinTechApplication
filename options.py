@@ -335,7 +335,10 @@ def app():
     else:
         st.session_state.page = page
 
-    if st.session_state.page == "Options Description":
+    if st.session_state.page == "Options Description": 
+        st.title("Understanding Options")
+
+
         st.markdown(
             """
             Options are derivative contracts that give the holder the right (but not the obligation) to buy or sell an underlying asset
