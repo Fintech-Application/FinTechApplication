@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 import yfinance as yf
 from datetime import date
-
+import os
 
 def stocks_description():
 
