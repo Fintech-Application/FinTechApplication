@@ -847,7 +847,7 @@ def app():
             st.subheader("Protective Put")
             st.dataframe(protective_put_df)
 
-        st.markdown("""
+        st.markdown(r"""
         ### 🛡️ What is a Protective Put?
 
         A **Protective Put** strategy involves **buying a stock** and **buying a put option** on the same stock. It acts like an **insurance policy** for investors:
