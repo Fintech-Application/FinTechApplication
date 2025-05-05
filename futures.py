@@ -3,8 +3,62 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def futures_definition():
-    # Title
-    st.title("Understanding Futures")
+    st.title("Understanding Futures Contracts")
+
+    st.markdown("""
+    ### 📘 **Futures Contracts: A Primer**
+
+    Futures contracts are standardized agreements to buy or sell a specific quantity of an asset at a predetermined price on a set future date. 
+    They are traded on organized exchanges and are essential tools for **hedging** and **speculation** in financial markets.
+    """)
+
+    st.markdown("""
+    ### 🔍 **Key Concepts of Futures Contracts**
+
+    - **Standardization:** All futures contracts are standardized in terms of size, expiration date, and delivery terms, facilitating liquidity and exchange trading.
+    - **Margin and Marking to Market:** 
+        - Investors deposit an **initial margin** to open a position.
+        - **Marking to market** adjusts account balances daily based on gains/losses.
+        - A **maintenance margin** ensures sufficient equity is held; falling below triggers a margin call.
+    - **Settlement Types:**
+        - **Physical Delivery:** Actual asset is delivered (e.g., oil, corn).
+        - **Cash Settlement:** No delivery occurs; the difference in contract value is exchanged.
+    - **Long vs. Short:**
+        - **Long Position:** Agree to buy the asset at contract maturity.
+        - **Short Position:** Agree to sell the asset at contract maturity.
+    """)
+
+    st.markdown("""
+    ### 📈 **Uses of Futures**
+
+    1. **Hedging:**  
+       Futures allow businesses and investors to lock in prices and offset risks.  
+       *Example:* An airline hedges fuel cost risk using oil futures.
+
+    2. **Speculation:**  
+       Traders use futures to bet on the direction of market prices without owning the underlying asset.
+
+    3. **Arbitrage:**  
+       Exploiting price differences between futures and spot markets or between different exchanges.
+    """)
+
+    st.markdown("""
+    ### ⚙️ **Common Futures Contracts**
+
+    | Asset Class        | Example Contract     | Exchange           |
+    |--------------------|----------------------|--------------------|
+    | Commodities        | Crude Oil, Gold      | NYMEX, COMEX       |
+    | Financial Indexes  | S&P 500 Futures      | CME Group          |
+    | Currencies         | EUR/USD Futures      | CME                |
+    | Interest Rates     | Treasury Futures     | CBOT               |
+    """)
+
+    st.markdown("""
+    ### 🧠 **Why Learn Futures?**
+
+    Mastering futures helps investors manage risk, speculate effectively, and understand market sentiment. 
+    Futures are central to many **portfolio strategies**, **hedging models**, and **derivative pricing frameworks**.
+    """)
 
 def oil_hedging():
     st.title("Oil Price Hedging Simulator")
