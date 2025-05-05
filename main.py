@@ -6,88 +6,129 @@ from options import app as options_app
 from market import app as market_app
 from futures import app as futures_app
 
-# Sidebar CSS styling
 NAVIGATION_BAR_STYLE = """
-<style>
-section[data-testid="stSidebar"] {
-    background-color: #66A2C4;
-}
-section[data-testid="stSidebar"] .css-1lcbmhc {
-    padding-top: 2rem !important;
-    margin-top: 1rem !important;
-}
-section[data-testid="stSidebar"] .css-1lcbmhc .css-qrbaxs a {
-    color: #000000 !important;
-    text-decoration: none !important;
-    display: block !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 5px !important;
-    margin-bottom: 0.5rem !important;
-    transition: background-color 0.3s, color 0.3s !important;
-}
-section[data-testid="stSidebar"] .css-1lcbmhc .css-qrbaxs a:hover {
-    background-color: #007bff !important;
-    color: #ffffff !important;
-}
-</style>
+    <style>
+        section[data-testid="stSidebar"] {
+            background-color : #66A2C4 ;
+        }
+        section[data-testid="stSidebar"] .css-1lcbmhc {
+            padding-top: 2rem !important;
+            margin-top: 1rem !important;
+        }
+        section[data-testid="stSidebar"] .css-1lcbmhc .css-qrbaxs {
+            padding: 0.5rem 1rem !important;
+            border-radius: 5px !important;
+            margin-bottom: 0.5rem !important;
+        }
+        section[data-testid="stSidebar"] .css-1lcbmhc .css-qrbaxs a {
+            color: #000000 !important;
+            text-decoration: none !important;
+            display: block !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 5px !important;
+            margin-bottom: 0.5rem !important;
+            transition: background-color 0.3s, color 0.3s !important;
+        }
+        section[data-testid="stSidebar"] .css-1lcbmhc .css-qrbaxs a:hover {
+            background-color: #007bff !important;
+            color: #ffffff !important;
+        }
+    </style>
 """
 
-# Home Page Function
-def homepage():
-    st.title("📊 FinTech Learning Hub")
-    st.markdown("Welcome to your interactive playground for mastering Financial Markets and Investment Analytics.")
-
-    st.markdown("""
-    This app is designed for students, professionals, and curious minds to **learn, simulate, and visualize** key financial concepts using:
-    - 🧮 Mathematical Models
-    - 📈 Real-world Data
-    - 💡 Intuitive Visualizations
-    - 🧠 Practical Insights
-    """)
-
-    st.subheader("🚀 What You'll Learn")
-    st.markdown("""
-    - 📘 **Options**: Black-Scholes, Binomial Trees, Put-Call Parity, Covered Calls, Protective Puts  
-    - 📗 **Portfolio Theory**: Efficient Frontier, Sharpe Ratio, Growth of $1, Risk/Return  
-    - 📙 **Bonds & T-Bills**: Inflation vs. T-Bills, Frequency Distributions  
-    - 📕 **Market Data**: S&P 500 Trends, Volatility, Sharpe Ratios  
-    - 📒 **Futures & Market Efficiency**: Strategy insights and risk analysis  
-    """)
-
-    st.markdown("Use the **sidebar** to start exploring each module.")
-    st.markdown("---")
-    st.markdown("Built by **Seyi Swathhy Yaganti** | [LinkedIn](https://www.linkedin.com/in/swathhy-yaganti/)")
-
-# Main App Controller
 def main():
-    st.set_page_config(page_title="FinTech App", page_icon=":chart_with_upwards_trend:", layout="wide")
+    st.set_page_config(
+        page_title="FinTech Learning App",
+        page_icon=":chart_with_upwards_trend:",
+        layout="wide"
+    )
 
-    # Inject custom sidebar styling
     st.sidebar.markdown(NAVIGATION_BAR_STYLE, unsafe_allow_html=True)
-    st.sidebar.title('🔎 Navigation')
+    st.sidebar.title('Navigation')
 
-    # Page selector
-    page = st.sidebar.selectbox(
-        "Select Module",
+    page_selection = st.sidebar.selectbox(
+        "Go to",
         ["Home", "Stocks", "Bonds", "Portfolio Theory", "Options", "Market Efficiency", "Futures"]
     )
 
-    # Page routing logic
-    if page == "Home":
-        homepage()
-    elif page == "Stocks":
+    if page_selection == "Home":
+        st.title("📈 Welcome to the FinTech Learning App")
+        st.markdown("""
+        **Empowering financial understanding through interactive exploration.**
+
+        This application is built as an educational companion to *Essentials of Investments* by Bodie, Kane, and Marcus — one of the most widely used texts in finance education. It transforms key investment concepts into intuitive, visual, and interactive experiences.
+        """)
+
+        st.markdown("### 🧭 What You’ll Explore:")
+        st.markdown("""
+        #### 🏦 **Stocks**
+        - Dividend Discount Model (DDM)
+        - Free Cash Flow to Firm (FCFF)
+        - Drivers of stock price and valuation
+        - Growth, risk, and market scenarios
+
+        #### 💸 **Bonds**
+        - Yield vs. price relationship
+        - Duration, convexity, and yield curves
+        - Interactive bond cash flow modeling
+
+        #### 🧠 **Portfolio Theory**
+        - Diversification, Efficient Frontier, and Capital Market Line
+        - Sharpe Ratio, historical return distributions
+        - Growth of $1, volatility and risk-adjusted return plots
+
+        #### 📊 **Options**
+        - Black-Scholes and binomial pricing models
+        - Visual strategies: protective puts, covered calls
+        - Intrinsic and time value breakdowns
+
+        #### 📉 **Market Efficiency**
+        - Efficient Market Hypothesis (EMH)
+        - Anomalies and behavioral finance
+        - Historical inflation vs. T-bills, S&P 500 distributions
+
+        #### 🔁 **Futures**
+        - Futures pricing, hedging, and speculation
+        - Margining mechanics
+        - Use cases for commodities, rates, and equity indices
+        """)
+
+        st.markdown("### 📚 Built for Learning and Practice")
+        st.markdown("""
+        Each module includes:
+        - 📊 **Interactive Graphs**
+        - 🧪 **Simulations**
+        - 🧠 **Theory + Data Integration**
+        - 📈 **Upload and analyze your own datasets**
+        """)
+
+        st.markdown("### 🎯 Who is This For?")
+        st.markdown("""
+        - **Students** in finance, economics, or MBA programs
+        - **Investors** seeking to deepen their understanding
+        - **Educators** teaching core investment principles
+        - **Career switchers** entering the financial or data-driven investing world
+        """)
+
+        st.markdown("### 🔐 Powered By:")
+        st.markdown("""
+        - Python, Streamlit, Pandas, Matplotlib
+        - Data APIs: FRED, Yahoo Finance
+        - Based on *Essentials of Investments* by Bodie, Kane, and Marcus
+        """)
+    
+    elif page_selection == "Stocks":
         stocks_app()
-    elif page == "Bonds":
+    elif page_selection == "Bonds":
         bonds_app()
-    elif page == "Portfolio Theory":
+    elif page_selection == "Portfolio Theory":
         portfolio_theory_app()
-    elif page == "Options":
+    elif page_selection == "Options":
         options_app()
-    elif page == "Market Efficiency":
+    elif page_selection == "Market Efficiency":
         market_app()
-    elif page == "Futures":
+    elif page_selection == "Futures":
         futures_app()
 
-# Launch
 if __name__ == '__main__':
     main()
