@@ -835,7 +835,7 @@ def free_cash_flows():
     st.pyplot(fig)
 
     # Load Excel file for download
-    file_path = 'datasets/FCFF.xlsx'  # Replace with the path to your local Excel file
+    file_path = 'datasets/FCFF.xls'  # Replace with the path to your local Excel file
     if os.path.exists(file_path):
         ext = os.path.splitext(file_path)[-1].lower()  # safer: handles '.XLSX' etc.
         
