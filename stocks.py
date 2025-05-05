@@ -836,7 +836,7 @@ def free_cash_flows():
 
     # Load Excel file for download
     file_path = 'datasets/FCFF.xls'  # Replace with the path to your local Excel file
-    df = pd.read_excel(file_path)
+    df = pd.read_excel(file_path, engine="openpyxl")  # for .xlsx files only
 
     # Convert to binary to make it downloadable
     with open(file_path, 'rb') as file:
