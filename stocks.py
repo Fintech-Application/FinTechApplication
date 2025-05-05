@@ -836,8 +836,17 @@ def free_cash_flows():
 
     # Load Excel file for download
     file_path = 'datasets/FCFF.xlsx'  # Replace with the path to your local Excel file
-    df = pd.read_excel(file_path, engine="openpyxl")  # for .xlsx files only
-
+    if os.path.exists(file_path):
+        ext = os.path.splitext(file_path)[-1].lower()  # safer: handles '.XLSX' etc.
+        
+        if ext == ".xlsx":
+            df = pd.read_excel(file_path, engine="openpyxl")
+        elif ext == ".xls":
+            df = pd.read_excel(file_path, engine="xlrd")
+        else:
+            st.error("Unsupported Excel file format.")
+    else:
+        st.error(f"File not found: {file_path}")
     
     # Convert to binary to make it downloadable
     with open(file_path, 'rb') as file:
