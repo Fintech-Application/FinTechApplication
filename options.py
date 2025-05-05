@@ -389,7 +389,7 @@ def app():
         # Intrinsic Payoff
         st.header("Intrinsic Payoff")
         st.markdown(
-        """
+        r"""
         The **Intrinsic Value** of an option is the immediate payoff if exercised:
         - **Call Option:** $$ \max(S - X, 0) $$
         - **Put Option:** $$ \max(X - S, 0) $$
