@@ -11,6 +11,7 @@ import yfinance as yf
 DEFAULT_API_KEY = "c88d55f2072ae1cb0915f9c827a354ce"
 
 def portfolio_description():
+    st.title('Portfolio Theory Page')
     st.write("""
     Portfolio theory, also known as Modern Portfolio Theory (MPT), is a framework developed by Harry Markowitz in the 1950s that aims to maximize expected return for a given level of risk, or minimize risk for a given level of expected return. Key principles include:
     - **Diversification**: Spreading investments across different asset classes to reduce overall risk.
@@ -964,7 +965,6 @@ def historical_sharpe_ratio():
 
 
 def app():
-    st.title('Portfolio Theory Page')
 
     if "page" not in st.session_state:
         st.session_state.page = "Portfolio Theory Description"
