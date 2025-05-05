@@ -835,9 +835,10 @@ def free_cash_flows():
     st.pyplot(fig)
 
     # Load Excel file for download
-    file_path = 'datasets/FCFF.xls'  # Replace with the path to your local Excel file
+    file_path = 'datasets/FCFF.xlsx'  # Replace with the path to your local Excel file
     df = pd.read_excel(file_path, engine="openpyxl")  # for .xlsx files only
 
+    
     # Convert to binary to make it downloadable
     with open(file_path, 'rb') as file:
         file_data = file.read()
