@@ -120,7 +120,7 @@ def oil_hedging():
     st.pyplot(fig)
 
 def app():
-    page = st.sidebar.selectbox("Select Page", ["Futures Description", "Oil Hedging", "Oil Hedging 2"])
+    page = st.sidebar.selectbox("Select Page", ["Futures Description", "Oil Hedging"])
 
     if "page" not in st.session_state:
         st.session_state.page = "Futures Description"
