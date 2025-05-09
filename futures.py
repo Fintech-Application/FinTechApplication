@@ -131,8 +131,7 @@ def app():
         futures_definition()
     elif st.session_state.page == "Oil Hedging":
         oil_hedging()
-    elif st.session_state.page == "Oil Hedging 2":
-        oil_hedging()
+
 
 if __name__ == "__main__":
     app()
